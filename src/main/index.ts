@@ -61,12 +61,12 @@ function createWindow(): void {
 let isPin = false;
 let isShowing = true;
 let hideTimeout: NodeJS.Timeout | null = null;
-
+let mouseMoveInterval: NodeJS.Timeout | null = null;
 function startMouseTracking() {
   const { width } = screen.getPrimaryDisplay().workAreaSize;
 
   // 监听鼠标移动事件
-  setInterval(() => {
+  mouseMoveInterval = setInterval(() => {
     const { x } = screen.getCursorScreenPoint();
     // 鼠标靠近屏幕右侧触发窗口滑出
     if (x >= width - 2 && !isShowing && !hideTimeout) {
@@ -141,6 +141,7 @@ app.whenReady().then(() => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
+  if (mouseMoveInterval) clearInterval(mouseMoveInterval);
   if (process.platform !== 'darwin') {
     app.quit()
   }

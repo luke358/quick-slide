@@ -18,17 +18,17 @@ function App(): JSX.Element {
       setIsHiding(true);
     };
 
-    ipcRenderer.on('window-showing', handleShowing);
-    ipcRenderer.on('window-hiding', handleHiding);
+    const removeShowing = ipcRenderer.on('window-showing', handleShowing);
+    const removeHiding = ipcRenderer.on('window-hiding', handleHiding);
 
     return () => {
-      ipcRenderer.removeListener('window-showing', handleShowing);
-      ipcRenderer.removeListener('window-hiding', handleHiding);
+      removeShowing();
+      removeHiding();
     };
   }, []);
   return (
     <div className={`app-container ${isHiding ? 'hiding' : ''}`}>
-      <div className='text-red-500'>
+      <div className='bg-blue-500'>
         tetestsetes
         <button onClick={() => {
           ipcRenderer.send('hide-window')
@@ -40,7 +40,7 @@ function App(): JSX.Element {
           ipcRenderer.send('unpin-window')
         }}>unpin</button>
       </div>
-    </div>
+    </div >
   );
 }
 

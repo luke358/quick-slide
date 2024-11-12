@@ -86,6 +86,8 @@ function startMouseTracking() {
       lastX = Infinity;
       updateWindowState({ isShowing: true })
       mainWindow?.webContents.send('window-showing')
+    } else if (deltaX >= 50 && x >= width - 1 && isShowing && !hideTimeout && !isPin) {
+      handleHideWindow();
     }
   }, 200);
 }

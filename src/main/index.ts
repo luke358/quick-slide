@@ -20,7 +20,7 @@ function createWindow(): void {
     transparent: true,
     show: false,
     alwaysOnTop: true,
-    type: 'panel',
+    type: 'toolbar',
     skipTaskbar: true,
     fullscreenable: false,
     ...(process.platform === 'linux' ? { icon } : {}),

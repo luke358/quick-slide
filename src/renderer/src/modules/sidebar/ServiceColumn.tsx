@@ -1,6 +1,6 @@
 import { PopoverProps } from "@radix-ui/react-popover";
 import { Popover, PopoverContent, PopoverTrigger } from "@renderer/components/ui/popover";
-import { ArrowLeft, ArrowRight, Delete, EarIcon, Home, Link2Icon, MoreVertical, NotebookIcon, RefreshCcw, Twitter } from "lucide-react";
+import { ArrowLeft, ArrowRight, Delete, EarIcon, Home, Link2Icon, MoreVertical, NotebookIcon, RefreshCcw, Twitter, Youtube } from "lucide-react";
 import { FC, PropsWithChildren, useCallback, useEffect, useState } from "react";
 interface ServiceComponentProps extends PopoverProps {
   service: {
@@ -32,7 +32,7 @@ const ServiceComponent = ({ service, children, isActive, onActivate, open, setOp
         {children}
       </div>
     </PopoverTrigger>
-    <PopoverContent side="right" align="start" alignOffset={5} className="backdrop-blur-3xl bg-white/10 outline-none border-none text-white pt-3 pb-4">
+    <PopoverContent side="right" align="start" alignOffset={5} className="backdrop-blur-3xl bg-black/40 shadow-md outline-none border-none text-white pt-3 pb-4">
       <div className="flex flex-col gap-4">
         <div className="flex justify-between w-full">
           <div className="flex gap-1">
@@ -99,5 +99,13 @@ export const ServiceColumn: FC = () => {
       setOpen={(open) => setOpen('Baidu', open)}>
       <Twitter className='w-4 h-10' />
     </ServiceComponent>
+    <ServiceComponent
+      isActive={active === 'Youtube'}
+      onActivate={() => setActive('Youtube')}
+      service={{ icon: <Youtube className='w-4 h-8' />, name: 'Youtube' }}
+      open={openPopover === 'Youtube'}
+      setOpen={(open) => setOpen('Youtube', open)}>
+      <Youtube className='w-4 h-10' />
+    </ServiceComponent> 
   </div>
 }

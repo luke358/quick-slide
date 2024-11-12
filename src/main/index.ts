@@ -37,7 +37,7 @@ function createWindow(): void {
   mainWindow.on('ready-to-show', () => {
     mainWindow?.show();
     updateWindowState({ isShowing: true })
-    mainWindow?.webContents.openDevTools();
+    // mainWindow?.webContents.openDevTools();
   })
 
   mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
@@ -79,7 +79,7 @@ function startMouseTracking() {
       mainWindow?.focus();
       mainWindow?.show();
       updateWindowState({ isShowing: true })
-      // mainWindow?.webContents.send('window-showing')
+      mainWindow?.webContents.send('window-showing')
     }
   }, 200);
 }

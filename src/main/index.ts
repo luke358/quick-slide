@@ -20,6 +20,7 @@ function createWindow(): void {
     transparent: true,
     show: false,
     alwaysOnTop: true,
+    type: 'panel',
     skipTaskbar: true,
     fullscreenable: false,
     ...(process.platform === 'linux' ? { icon } : {}),
@@ -42,8 +43,7 @@ function createWindow(): void {
 
   mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
 
-  mainWindow.setAlwaysOnTop(true, 'screen-saver');
-
+  mainWindow.setAlwaysOnTop(true, 'floating', 1);
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)

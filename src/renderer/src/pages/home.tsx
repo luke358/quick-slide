@@ -1,8 +1,11 @@
-import { Sidebar } from "@renderer/components/Sidebar";
+import { ServiceView } from "@renderer/components/ServiceView";
+import { Sidebar } from "@renderer/modules/sidebar";
 
 export default function Home() {
   return <div className="flex flex-row h-full">
     <Sidebar />
-    <div>111</div>
+    <div className="flex-1">
+      <ServiceView />
+    </div>
   </div>
 }

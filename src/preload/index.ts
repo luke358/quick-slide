@@ -1,6 +1,7 @@
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
+const { ipcRenderer } = electronAPI
 // Custom APIs for renderer
 const api = {
   // 获取状态
@@ -12,15 +13,18 @@ const api = {
 
   // 监听状态变化
   onWindowStateChange: (callback) => {
-    ipcRenderer.on('window-state-changed', (_, state) => callback(state))
+    return ipcRenderer.on('window-state-changed', (_, state) => callback(state))
   },
 
   // 监听窗口隐藏
   onWindowHiding: (callback) => {
-    ipcRenderer.on('window-hiding', callback)
+    return ipcRenderer.on('window-hiding', callback)
   },
   onWindowShowing: (callback) => {
-    ipcRenderer.on('window-showing', callback)
+    return ipcRenderer.on('window-showing', callback)
+  },
+  onWindowBlur: (callback) => {
+    return ipcRenderer.on('window-blur', callback)
   }
 }
 

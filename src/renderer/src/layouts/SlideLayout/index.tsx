@@ -7,12 +7,18 @@ export default function SlideLayout() {
   const [isHiding, setIsHiding] = useState(false);
 
   useEffect(() => {
-    window.api.onWindowHiding(() => {
+    const handleHiding = () => {
       setIsHiding(true);
-    })
-    window.api.onWindowShowing(() => {
+    }
+    const handleShowing = () => {
       setIsHiding(false);
-    })
+    }
+    const offHiding = window.api.onWindowHiding(handleHiding)
+    const offShowing = window.api.onWindowShowing(handleShowing)
+    return () => {
+      offHiding()
+      offShowing()
+    }
   }, [])
 
   return <div className={`slide-layout ${isHiding ? 'hiding' : ''}`}>

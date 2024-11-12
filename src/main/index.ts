@@ -1,20 +1,20 @@
-import { app, shell, BrowserWindow, ipcMain, screen } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, screen, MenuItemConstructorOptions, Menu } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { store } from './store';
 
 let mainWindow: BrowserWindow | null = null;
-const WINDOW_WIDTH = 300;
+const WINDOW_WIDTH = 530;
 function createWindow(): void {
   const { width: screenWidth } = screen.getPrimaryDisplay().workAreaSize
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: WINDOW_WIDTH,
-    height: 600,
-    x: screenWidth - WINDOW_WIDTH + 10,
-    y: -10,
+    height: 800,
+    x: screenWidth - WINDOW_WIDTH - 10,
+    y: 100,
     frame: false,
     hasShadow: false,
     transparent: true,
@@ -23,19 +23,21 @@ function createWindow(): void {
     skipTaskbar: true,
     fullscreenable: false,
     ...(process.platform === 'linux' ? { icon } : {}),
+    hiddenInMissionControl: true,
     webPreferences: {
       preload: join(__dirname, '../preload/index.mjs'),
       sandbox: false,
       offscreen: false,
       contextIsolation: true,
       nodeIntegration: false,
+      webviewTag: true,
     }
   })
 
   mainWindow.on('ready-to-show', () => {
     mainWindow?.show();
     updateWindowState({ isShowing: true })
-    // mainWindow?.webContents.openDevTools();
+    mainWindow?.webContents.openDevTools();
   })
 
   mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
@@ -46,6 +48,9 @@ function createWindow(): void {
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
     return { action: 'deny' }
+  })
+  mainWindow.webContents.on('context-menu', () => {
+    mainWindow?.focus()
   })
 
   // HMR for renderer base on electron-vite cli.
@@ -74,16 +79,9 @@ function startMouseTracking() {
       mainWindow?.focus();
       mainWindow?.show();
       updateWindowState({ isShowing: true })
-      mainWindow?.webContents.send('window-showing')
+      // mainWindow?.webContents.send('window-showing')
     }
   }, 200);
-
-  // pin 状态不触发隐藏
-  mainWindow?.on('blur', () => {
-    if (isPin || !isShowing) return;
-    handleHideWindow();
-  })
-
 }
 
 async function updateWindowState(newState) {
@@ -146,6 +144,25 @@ app.whenReady().then(() => {
     }
   })
 
+  ipcMain.handle('show-context-menu', async (_, value) => {
+    const defer = Promise.withResolvers<void>()
+    const normalizedMenuItems = normalizeMenuItems(value.items, { sender: mainWindow?.webContents! })
+    const menu = Menu.buildFromTemplate(normalizedMenuItems)
+    menu.popup({
+      callback: () => defer.resolve(),
+    })
+    return defer.promise
+  })
+
+  ipcMain.on('relaunch', () => {
+    app.relaunch()
+    app.exit(0)
+  })
+
+  ipcMain.on('quit', () => {
+    app.quit()
+  })
+
   createWindow()
 
   app.on('activate', function () {
@@ -164,6 +181,37 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
-
+app.on('browser-window-blur', () => {
+  mainWindow?.webContents.send('window-blur')
+  if (isPin || !isShowing) return;
+  handleHideWindow();
+})
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
+
+
+type SerializableMenuItem = Omit<MenuItemConstructorOptions, "click" | "submenu"> & {
+  // id: string
+  submenu?: SerializableMenuItem[]
+}
+
+function normalizeMenuItems(
+  items: SerializableMenuItem[],
+  context: { sender: Electron.WebContents },
+  path = [] as number[],
+): MenuItemConstructorOptions[] {
+  return items.map((item, index) => {
+
+    const curPath = [...path, index]
+    return {
+      ...item,
+      click() {
+        context.sender.send("menu-click", {
+          id: item.id,
+          path: curPath,
+        })
+      },
+      submenu: item.submenu ? normalizeMenuItems(item.submenu, context, curPath) : undefined,
+    }
+  })
+}

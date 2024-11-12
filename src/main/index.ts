@@ -68,16 +68,22 @@ let isPin = store.get('window.isPin') as boolean
 let isShowing = store.get('window.isShowing') as boolean
 let hideTimeout: NodeJS.Timeout | null = null;
 let mouseMoveInterval: NodeJS.Timeout | null = null;
+let lastX = Infinity;
 function startMouseTracking() {
   const { width } = screen.getPrimaryDisplay().workAreaSize;
 
   // 监听鼠标移动事件
   mouseMoveInterval = setInterval(() => {
     const { x } = screen.getCursorScreenPoint();
+    const deltaX = x - lastX;
+    lastX = Math.min(x, lastX);
+
     // 鼠标靠近屏幕右侧触发窗口滑出
-    if (x >= width - 2 && !isShowing && !hideTimeout) {
+    // 鼠标移动超过边界50px触发
+    if (deltaX >= 50 && x >= width - 1 && !isShowing && !hideTimeout) {
       mainWindow?.focus();
       mainWindow?.show();
+      lastX = Infinity;
       updateWindowState({ isShowing: true })
       mainWindow?.webContents.send('window-showing')
     }

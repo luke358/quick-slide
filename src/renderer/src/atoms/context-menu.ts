@@ -60,19 +60,12 @@ type BaseMenuItemText = {
   supportMultipleSelection?: boolean
 }
 
-type BaseMenuItemCheckbox = {
-  type: "checkbox"
-  label: string
-  click?: () => void
-  checked?: boolean
-}
-
 type BaseMenuItemSeparator = {
   type: "separator"
   disabled?: boolean
 }
 
-type BaseMenuItem = BaseMenuItemText | BaseMenuItemCheckbox | BaseMenuItemSeparator
+type BaseMenuItem = BaseMenuItemText | BaseMenuItemSeparator
 
 export type FollowMenuItem = BaseMenuItem & {
   submenu?: FollowMenuItem[]
@@ -80,7 +73,6 @@ export type FollowMenuItem = BaseMenuItem & {
 
 export type MenuItemInput =
   | (BaseMenuItemText & { hide?: boolean; submenu?: MenuItemInput[] })
-  | (BaseMenuItemCheckbox & { hide?: boolean })
   | (BaseMenuItemSeparator & { hide?: boolean })
   | null
   | undefined
@@ -112,9 +104,6 @@ function normalizeMenuItems(items: MenuItemInput[]): FollowMenuItem[] {
       if (item.type === "separator") {
         return item
       }
-      if (item.type === "checkbox") {
-        return item
-      }
 
       return {
         ...item,
@@ -130,14 +119,7 @@ function transformMenuItemsForNative(nextItems: FollowMenuItem[]): ElectronMenuI
     if (item.type === "separator") {
       return { type: "separator" }
     }
-    if (item.type === "checkbox") {
-      return {
-        type: "checkbox",
-        label: item.label,
-        click: item.click,
-        checked: item.checked,
-      }
-    }
+  
     return {
       type: typeof item.checked === "boolean" ? "checkbox" : undefined,
       label: item.label,

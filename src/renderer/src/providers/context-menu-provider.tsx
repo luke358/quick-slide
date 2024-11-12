@@ -1,7 +1,7 @@
 import { nextFrame, preventDefault } from "@renderer/lib/dom"
 import { cn } from "@renderer/lib/utils"
 import { FC, Fragment, memo, PropsWithChildren, useCallback, useEffect, useRef } from "react"
-// import { useHotkeys } from "react-hotkeys-hook"
+import { useHotkeys } from "react-hotkeys-hook"
 
 import type { FollowMenuItem } from "@renderer/atoms/context-menu"
 import { useContextMenuState } from "@renderer/atoms/context-menu"
@@ -17,9 +17,9 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from "@renderer/components/ui/context-menu"
-// import { KbdCombined } from "~/components/ui/kbd/Kbd"
-// import { HotKeyScopeMap } from "~/constants"
-// import { useSwitchHotKeyScope } from "~/hooks/common"
+import { KbdCombined } from "@renderer/components/ui/kbd"
+import { HotKeyScopeMap } from "@renderer/constants/hotkeys"
+import { useSwitchHotKeyScope } from "@renderer/hooks/common"
 
 export const ContextMenuProvider: FC<PropsWithChildren> = ({ children }) => (
   <>
@@ -32,15 +32,15 @@ const Handler = () => {
   const ref = useRef<HTMLSpanElement>(null)
   const [contextMenuState, setContextMenuState] = useContextMenuState()
 
-  // const switchHotkeyScope = useSwitchHotKeyScope()
+  const switchHotkeyScope = useSwitchHotKeyScope()
 
-  // useEffect(() => {
-  //   if (!contextMenuState.open) return
-  //   // switchHotkeyScope("Menu")
-  //   return () => {
-  //     // switchHotkeyScope("Home")
-  //   }
-  // }, [contextMenuState.open, switchHotkeyScope])
+  useEffect(() => {
+    if (!contextMenuState.open) return
+    switchHotkeyScope("Menu")
+    return () => {
+      switchHotkeyScope("Home")
+    }
+  }, [contextMenuState.open, switchHotkeyScope])
 
   useEffect(() => {
     if (!contextMenuState.open) return
@@ -91,11 +91,11 @@ const Item = memo(({ item }: { item: FollowMenuItem }) => {
     }
   }, [item])
   const itemRef = useRef<HTMLDivElement>(null)
-  // useHotkeys((item as any).shortcut, () => itemRef.current?.click(), {
-  //   enabled: (item as any).enabled !== false && (item as any).shortcut !== undefined,
-  //   // scopes: HotKeyScopeMap.Menu,
-  //   preventDefault: true,
-  // })
+  useHotkeys((item as any).shortcut, () => itemRef.current?.click(), {
+    enabled: (item as any).enabled !== false && (item as any).shortcut !== undefined,
+    scopes: HotKeyScopeMap.Menu,
+    preventDefault: true,
+  })
 
   switch (item.type) {
     case "separator": {
@@ -124,11 +124,11 @@ const Item = memo(({ item }: { item: FollowMenuItem }) => {
             )}
             <span className={cn(item.icon && "pl-6")}>{item.label}</span>
 
-            {/* {!!item.shortcut && (
+            {!!item.shortcut && (
               <div className="ml-auto pl-4">
                 <KbdCombined joint>{item.shortcut}</KbdCombined>
               </div>
-            )} */}
+            )}
           </Wrapper>
           {item.submenu && (
             <ContextMenuPortal>

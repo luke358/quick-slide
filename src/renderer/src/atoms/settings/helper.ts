@@ -2,7 +2,7 @@ import { atomWithStorage, selectAtom } from 'jotai/utils'
 import { useMemo } from 'react'
 import { useAtomValue } from 'jotai'
 import { createAtomHooks } from '@renderer/lib/jotai'
-import { useRefValue } from '@renderer/hooks/common/useRefValue'
+import { useRefValue } from '@renderer/hooks/common'
 import { getStorageNS } from '@renderer/lib/ns'
 // import {
 //   createSettingBuilder,

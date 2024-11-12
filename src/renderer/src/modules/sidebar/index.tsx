@@ -2,7 +2,7 @@ import { FC, useCallback, useEffect, useState } from 'react';
 import { PinIcon, ArrowRightIcon, MoreHorizontalIcon, PinOff } from 'lucide-react';
 import { useShowContextMenu } from '@renderer/atoms/context-menu';
 import { ServiceColumn } from './ServiceColumn';
-// import { useShowContextMenu } from '@renderer/atoms/context-menu';
+
 export const Sidebar: FC = () => {
   const { ipcRenderer } = window.electron;
 
@@ -20,9 +20,10 @@ export const Sidebar: FC = () => {
             label: 'Perferences',
             submenu: [
               {
-                type: "checkbox",
+                type: "text",
                 label: 'Pin SlideWindow',
                 checked: windowState.isPin,
+                shortcut: "Meta+P",
                 click: () => {
                   ipcRenderer.send('set-pin', !windowState.isPin);
                 }
@@ -41,10 +42,12 @@ export const Sidebar: FC = () => {
               {
                 type: "text",
                 label: 'Clear Cache',
+                shortcut: "Meta+C",
               },
               {
                 type: "text",
                 label: 'Clear Cookies',
+                shortcut: "Meta+D",
               },
               {
                 type: 'text',

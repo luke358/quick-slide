@@ -4,28 +4,16 @@ import { useEffect } from "react";
 import { useState } from "react";
 
 export default function SlideLayout() {
-  const { ipcRenderer } = window.electron;
-
   const [isHiding, setIsHiding] = useState(false);
 
   useEffect(() => {
-
-    const handleShowing = () => {
-      setIsHiding(false);
-    };
-
-    const handleHiding = () => {
+    window.api.onWindowHiding(() => {
       setIsHiding(true);
-    };
-
-    const removeShowing = ipcRenderer.on('window-showing', handleShowing);
-    const removeHiding = ipcRenderer.on('window-hiding', handleHiding);
-
-    return () => {
-      removeShowing();
-      removeHiding();
-    };
-  }, []);
+    })
+    window.api.onWindowShowing(() => {
+      setIsHiding(false);
+    })
+  }, [])
 
   return <div className={`slide-layout ${isHiding ? 'hiding' : ''}`}>
     <Outlet />

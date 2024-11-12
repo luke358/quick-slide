@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
+  "type": "module",
   "author": "example.com",
   "homepage": "https://electron-vite.org",
   "scripts": {
@@ -25,7 +26,10 @@
     "@electron-toolkit/utils": "^3.0.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "dot-prop": "^9.0.0",
+    "electron-store": "^10.0.0",
     "electron-updater": "^6.1.7",
+    "lowdb": "^7.0.1",
     "lucide-react": "^0.456.0",
     "react-router-dom": "^6.28.0",
     "tailwind-merge": "^2.5.4",

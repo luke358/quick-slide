@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, ipcMain, screen } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-
+import { store } from './store';
 
 let mainWindow: BrowserWindow | null = null;
 const WINDOW_WIDTH = 300;
@@ -24,7 +24,7 @@ function createWindow(): void {
     fullscreenable: false,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
+      preload: join(__dirname, '../preload/index.mjs'),
       sandbox: false,
       offscreen: false,
       contextIsolation: true,
@@ -34,6 +34,7 @@ function createWindow(): void {
 
   mainWindow.on('ready-to-show', () => {
     mainWindow?.show();
+    updateWindowState({ isShowing: true })
     // mainWindow?.webContents.openDevTools();
   })
 
@@ -58,8 +59,8 @@ function createWindow(): void {
   startMouseTracking();
 }
 
-let isPin = false;
-let isShowing = true;
+let isPin = store.get('window.isPin') as boolean
+let isShowing = store.get('window.isShowing') as boolean
 let hideTimeout: NodeJS.Timeout | null = null;
 let mouseMoveInterval: NodeJS.Timeout | null = null;
 function startMouseTracking() {
@@ -72,7 +73,7 @@ function startMouseTracking() {
     if (x >= width - 2 && !isShowing && !hideTimeout) {
       mainWindow?.focus();
       mainWindow?.show();
-      isShowing = true;
+      updateWindowState({ isShowing: true })
       mainWindow?.webContents.send('window-showing')
     }
   }, 200);
@@ -85,11 +86,24 @@ function startMouseTracking() {
 
 }
 
+async function updateWindowState(newState) {
+  // 更新内存中的状态
+  if ('isPin' in newState) isPin = newState.isPin
+  if ('isShowing' in newState) isShowing = newState.isShowing
+
+  // 更新存储的状态
+  store.set('window', { isPin, isShowing })
+
+  // 通知渲染进程
+  mainWindow?.webContents.send('window-state-changed', { isPin, isShowing })
+}
+
 function handleHideWindow() {
   if (hideTimeout) return;  // 如果已经在隐藏过程中，直接返回
 
   mainWindow?.webContents.send('window-hiding')
-  isShowing = false;  // 立即设置状态
+  // isShowing = false;  // 立即设置状态
+  updateWindowState({ isShowing: false })
 
   hideTimeout = setTimeout(() => {
     mainWindow?.hide();
@@ -116,16 +130,20 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
 
-  ipcMain.on('hide-window', () => {
-    handleHideWindow();
+  ipcMain.handle('get-window-state', () => ({
+    isPin: store.get('window.isPin'),
+    isShowing: store.get('window.isShowing')
+  }))
+
+  ipcMain.on('set-pin', async (_, value) => {
+    await updateWindowState({ isPin: value })
   })
 
-  ipcMain.on('pin-window', () => {
-    isPin = true;
-  })
-
-  ipcMain.on('unpin-window', () => {
-    isPin = false;
+  ipcMain.on('set-showing', async (_, value) => {
+    await updateWindowState({ isShowing: value })
+    if (!value) {
+      handleHideWindow();
+    }
   })
 
   createWindow()

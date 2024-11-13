@@ -10,7 +10,7 @@ declare global {
       onWindowStateChange: (callback: (state: WindowState) => void) => () => void
       onWindowHiding: (callback: () => void) => () => void
       onWindowShowing: (callback: () => void) => () => void
-      onWindowBlur: (callback: () => void) => () => void
+      // onWindowBlur: (callback: () => void) => () => void
     }
   }
 }

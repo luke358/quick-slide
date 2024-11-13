@@ -1,17 +1,18 @@
 import { PopoverProps } from "@radix-ui/react-popover";
 import { Popover, PopoverContent, PopoverTrigger } from "@renderer/components/ui/popover";
-import { ArrowLeft, ArrowRight, Delete, EarIcon, Home, Link2Icon, MoreVertical, NotebookIcon, RefreshCcw, Twitter, Youtube } from "lucide-react";
+import { useActiveServiceId, useServicesData } from "@renderer/store/services/hooks";
+import { serviceActions } from "@renderer/store/services/store";
+import { IService } from "@renderer/store/services/types";
+import { ArrowLeft, ArrowRight, Delete, EarIcon, Home, Link2Icon, MoreVertical, NotebookIcon, PlusCircle, RefreshCcw, Twitter, Youtube } from "lucide-react";
 import { FC, PropsWithChildren, useCallback, useEffect, useState } from "react";
 interface ServiceComponentProps extends PopoverProps {
-  service: {
-    icon: React.ReactNode;
-    name: string;
-  }
+  service: IService
   isActive?: boolean
-  onActivate?: () => void;
+  onActivate?: (id: string) => void;
   open: boolean;
   setOpen: (open: boolean) => void;
 }
+
 const ServiceComponent = ({ service, children, isActive, onActivate, open, setOpen, ...props }: PropsWithChildren<ServiceComponentProps>) => {
 
   return <Popover modal open={open} onOpenChange={setOpen} {...props}>
@@ -21,7 +22,7 @@ const ServiceComponent = ({ service, children, isActive, onActivate, open, setOp
         if (isActive) {
           setOpen(!open)
         } else {
-          onActivate?.()
+          onActivate?.(service.serviceId)
         }
       }}
       onContextMenu={(e) => {
@@ -64,20 +65,22 @@ const ServiceComponent = ({ service, children, isActive, onActivate, open, setOp
   </Popover >
 }
 
+const { ipcRenderer } = window.electron
 export const ServiceColumn: FC = () => {
-
-  const [active, setActive] = useState('Twitter')
   const [openPopover, setOpenPopover] = useState<string | null>(null)
+  const { services } = useServicesData()
+  const id = useActiveServiceId()
 
   useEffect(() => {
     const handleHiding = () => {
       setOpenPopover(null)
     }
     const offWindowHiding = window.api.onWindowHiding(handleHiding)
-    const offWindowBlur = window.api.onWindowBlur(handleHiding)
+    // const offWindowBlur = window.api.onWindowBlur(handleHiding)
+    window.addEventListener('blur', handleHiding)
     return () => {
       offWindowHiding()
-      offWindowBlur()
+      window.removeEventListener('blur', handleHiding)
     }
   }, [])
 
@@ -86,29 +89,21 @@ export const ServiceColumn: FC = () => {
   }, [openPopover])
 
   return <div className='flex-1 flex flex-col items-center w-full pt-2'>
-    <ServiceComponent
-      isActive={active === 'Twitter'}
-      onActivate={() => setActive('Twitter')}
-      service={{ icon: <Twitter className='w-4 h-8' />, name: 'Twitter' }}
-      open={openPopover === 'Twitter'}
-      setOpen={(open) => setOpen('Twitter', open)}>
-      <Twitter className='w-4 h-10' />
-    </ServiceComponent>
-    <ServiceComponent
-      isActive={active === 'Baidu'}
-      onActivate={() => setActive('Baidu')}
-      service={{ icon: <Twitter className='w-4 h-8' />, name: 'Baidu' }}
-      open={openPopover === 'Baidu'}
-      setOpen={(open) => setOpen('Baidu', open)}>
-      <Twitter className='w-4 h-10' />
-    </ServiceComponent>
-    <ServiceComponent
-      isActive={active === 'Youtube'}
-      onActivate={() => setActive('Youtube')}
-      service={{ icon: <Youtube className='w-4 h-8' />, name: 'Youtube' }}
-      open={openPopover === 'Youtube'}
-      setOpen={(open) => setOpen('Youtube', open)}>
-      <Youtube className='w-4 h-10' />
-    </ServiceComponent>
+    {
+      services?.map((service) => <ServiceComponent
+        key={service.serviceId}
+        service={service}
+        isActive={id === service.serviceId}
+        onActivate={serviceActions.setActive}
+        open={openPopover === service.serviceId}
+        setOpen={(open) => setOpen(service.serviceId, open)}
+      >
+        <Youtube className='w-4 h-10' />
+      </ServiceComponent>)
+    }
+    <PlusCircle className='w-4 h-10'
+      onClick={() => {
+        ipcRenderer.invoke('db:createService')
+      }} />
   </div>
 }

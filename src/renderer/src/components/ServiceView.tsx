@@ -1,9 +1,13 @@
 import { FC } from 'react';
 import { Webview } from './Webview';
+import { IService } from '@renderer/store/services/types';
+import { cn } from '@renderer/lib/utils';
 
-export const ServiceView: FC = () => {
-
-  return <div className='webview-container w-full h-full'>
-    <Webview />
+interface ServiceViewProps extends React.HTMLAttributes<HTMLDivElement> {
+  service: IService
+}
+export const ServiceView: FC<ServiceViewProps> = ({ service, className, style }) => {
+  return <div className={cn('webview-container w-full h-full', className)} style={style}>
+    <Webview url={service.serviceUrl} />
   </div>
 }

@@ -5,7 +5,7 @@
   will-change: transform;
   backface-visibility: hidden;
   transform-style: preserve-3d;
-  background: red;
+  background: white;
 }
 
 .slide-layout.hiding {

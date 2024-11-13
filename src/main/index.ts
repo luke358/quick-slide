@@ -3,6 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { store } from './store';
+import { registerDatabaseIPC } from './db';
 
 let mainWindow: BrowserWindow | null = null;
 const WINDOW_WIDTH = 530;
@@ -20,9 +21,13 @@ function createWindow(): void {
     transparent: true,
     show: false,
     alwaysOnTop: true,
-    type: 'toolbar',
+    type: 'panel',
     skipTaskbar: true,
     fullscreenable: false,
+    focusable: true,
+    titleBarStyle: 'hidden',
+    roundedCorners: false,  // macOS
+    visualEffectState: 'active',  // macOS
     ...(process.platform === 'linux' ? { icon } : {}),
     hiddenInMissionControl: true,
     webPreferences: {
@@ -41,9 +46,11 @@ function createWindow(): void {
     // mainWindow?.webContents.openDevTools();
   })
 
-  mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+  mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true, skipTransformProcessType: true });
 
-  mainWindow.setAlwaysOnTop(true, 'floating', 1);
+  mainWindow.setAlwaysOnTop(true, 'screen-saver');
+
+  mainWindow.setWindowButtonVisibility(false)
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
@@ -62,6 +69,12 @@ function createWindow(): void {
   }
 
   startMouseTracking();
+
+  mainWindow.webContents.on('blur', () => {
+    // mainWindow?.webContents.send('window-blur')
+    if (isPin || !isShowing) return;
+    handleHideWindow();
+  })
 }
 
 let isPin = store.get('window.isPin') as boolean
@@ -120,7 +133,8 @@ function handleHideWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+  await registerDatabaseIPC()
   app.dock.hide(); // 隐藏 Dock 图标
 
   // Set app user model id for windows
@@ -171,6 +185,10 @@ app.whenReady().then(() => {
     app.quit()
   })
 
+  ipcMain.handle('get-user-data-path', () => {
+    return app.getPath('userData')
+  })
+
   createWindow()
 
   app.on('activate', function () {
@@ -189,11 +207,11 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
-app.on('browser-window-blur', () => {
-  mainWindow?.webContents.send('window-blur')
-  if (isPin || !isShowing) return;
-  handleHideWindow();
-})
+// app.on('browser-window-blur', () => {
+//   mainWindow?.webContents.send('window-blur')
+//   if (isPin || !isShowing) return;
+//   handleHideWindow();
+// })
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
 

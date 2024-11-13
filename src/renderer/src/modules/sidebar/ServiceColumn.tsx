@@ -24,6 +24,8 @@ const ServiceIcon = ({ iconUrl, className }: { iconUrl?: string | null, classNam
 const ServiceComponent = ({ service, shortcut, children, isActive, onActivate, open, setOpen, ...props }: PropsWithChildren<ServiceComponentProps>) => {
   const finalShortcut = getOS() === "Windows" ? shortcut?.replace("meta", "ctrl").replace("Meta", "Ctrl") : shortcut
 
+  const webview = service.webview
+
   useHotkeys(finalShortcut, (e) => {
     e.preventDefault()
     if (isActive) {
@@ -70,10 +72,18 @@ const ServiceComponent = ({ service, shortcut, children, isActive, onActivate, o
           </div>
         </div>
         <div className="flex justify-between items-center w-full">
-          <Home size={14} />
-          <ArrowLeft size={14} />
-          <ArrowRight size={14} />
-          <RefreshCcw size={14} />
+          <Home size={14} onClick={() => {
+            webview?.loadURL?.(service.serviceUrl)
+          }} />
+          <ArrowLeft size={14} onClick={() => {
+            webview?.goBack?.()
+          }} className={cn({ 'cursor-not-allowed': !webview?.canGoBack })} />
+          <ArrowRight size={14} onClick={() => {
+            webview?.goForward?.()
+          }} className={cn({ 'cursor-not-allowed': !webview?.canGoForward })} />
+          <RefreshCcw size={14} onClick={() => {
+            webview?.reload?.()
+          }} />
           <Link2Icon size={14} />
           <NotebookIcon size={14} />
           <MoreVertical size={14} />

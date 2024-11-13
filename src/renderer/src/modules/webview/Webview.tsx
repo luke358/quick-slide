@@ -18,12 +18,18 @@ export const Webview: FC<WebviewProps> = ({ service }) => {
   const didFailLoad = () => {
     serviceActions.updateRuntimeState(service, 'isLoading', false)
   }
+  const mediaStartedPlaying = () => {
+    serviceActions.updateRuntimeState(service, 'isMediaPlaying', true)
+  }
+  const mediaPaused = () => {
+    serviceActions.updateRuntimeState(service, 'isMediaPlaying', false)
+  }
   useEffect(() => {
     webViewRef?.current?.addEventListener('did-finish-load', didFinishLoad)
     webViewRef.current?.addEventListener('did-attach', didAttach)
     webViewRef.current?.addEventListener('did-fail-load', didFailLoad)
-    // webViewRef.current?.addEventListener('media-started-playing', mediaStartedPlaying)
-    // webViewRef.current?.addEventListener('media-paused', mediaPaused)
+    webViewRef.current?.addEventListener('media-started-playing', mediaStartedPlaying)
+    webViewRef.current?.addEventListener('media-paused', mediaPaused)
     return () => {
       webViewRef?.current?.removeEventListener('did-finish-load', didFinishLoad)
       webViewRef.current?.removeEventListener('did-attach', didAttach)

@@ -9,6 +9,8 @@ export const RUNTIME_STATE_KEYS = [
   'lastPoll',
   'isMediaPlaying',
   'isHibernating',
+  'lastHibernated',
+  'lastUsed',
   'isLoading',
   'isError',
   'shareWithWebview'
@@ -24,6 +26,8 @@ export interface RuntimeState {
   lastPoll: number
   isMediaPlaying: boolean
   isHibernating: boolean
+  lastHibernated: number | null
+  lastUsed: number
   isLoading: boolean
   isError: boolean
   shareWithWebview: {

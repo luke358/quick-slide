@@ -14,7 +14,7 @@ export const ServiceView: FC<ServiceViewProps> = ({ service, className, style })
 
   const renderWebview = () => {
     if (!service.enabled) return <WebViewEnable />
-    if (service.isHibernateEnabled && service.isHibernating) return <WebViewHibernate />
+    if (service.isHibernateEnabled && service.isHibernating) return <WebViewHibernate service={service} />
     if (service.isError) return <WebViewError />
     return <Webview service={service} />
   }

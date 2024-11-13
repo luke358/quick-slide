@@ -1,7 +1,9 @@
 // import { cleanseJSObject } from "@renderer/lib/jsUtils";
 import { Services } from "@prisma/client";
 import { createZustandStore } from "../utils/helper";
-import { ElectronWebView, IService, RUNTIME_STATE_KEYS, RuntimeState, ServiceState } from "./types";
+import { IService, RuntimeState, ServiceState } from "./types";
+import ms from "ms";
+import { debounce } from "lodash-es";
 // import ms from 'ms';
 
 export const useServiceStore = createZustandStore<ServiceState>("service")(() => ({
@@ -16,7 +18,6 @@ const set = useServiceStore.setState;
 
 class ServiceActions {
 
-
   // Actions
   // addService: (service: IService) => void;
   // removeService: (id: string) => void;
@@ -25,9 +26,21 @@ class ServiceActions {
   // startPolling: (id: string) => void;
   // stopPolling: (id: string) => void;
 
+  constructor() {
+    this.serviceMaintenanceTick()
+  }
 
   setActive(id: string) {
-    set((state) => ({ activeServiceId: id, serviceUsed: new Set(state.serviceUsed).add(id) }));
+    const activeServiceId = get().activeServiceId;
+    set((state) => ({
+      activeServiceId: id, serviceUsed: new Set(state.serviceUsed).add(id),
+      services: state.services.
+        map(service => service.serviceId === id ?
+          { ...service, lastUsed: Date.now() } :
+          service.serviceId === activeServiceId ?
+            { ...service, lastUsed: Date.now() } :
+            service)
+    }));
   }
 
   // Fetch
@@ -42,6 +55,46 @@ class ServiceActions {
       set(() => ({ services: mergedServices, activeServiceId: null, serviceUsed: new Set() }))
     }
     return mergedServices
+  }
+  _one(id: string): IService {
+    return get().services.find(service => service.serviceId === id) as IService;
+  }
+  awake({ serviceId }: { serviceId: string }) {
+    set((state) => ({ services: state.services.map(service => service.serviceId === serviceId ? { ...service, lastHibernated: null, isHibernating: false, lastUsed: Date.now() } : service) }))
+  }
+  canHibernate(service: IService) {
+    return service?.isHibernateEnabled && !service?.isMediaPlaying
+  }
+  hibernate({ serviceId }: { serviceId: string }) {
+    const service = this._one(serviceId);
+    if (!this.canHibernate(service)) return;
+    set((state) => ({ services: state.services.map(service => service.serviceId === serviceId ? { ...service, lastHibernated: Date.now(), isHibernating: true } : service) }))
+  }
+
+  teardown() {
+    this.serviceMaintenanceTick.cancel()
+  }
+
+  _serviceMaintenanceTicker() {
+    this._serviceMaintenance();
+    this.serviceMaintenanceTick();
+  }
+
+  serviceMaintenanceTick = debounce(this._serviceMaintenanceTicker, ms('10s'))
+
+  _serviceMaintenance() {
+    for (const service of get().services) {
+      if (service.serviceId !== get().activeServiceId) {
+        if (
+          !service.lastHibernated
+          && Date.now() - service.lastUsed
+          > ms('10s')
+        ) {
+          // If service is stale, hibernate it.
+          this.hibernate({ serviceId: service.serviceId })
+        }
+      }
+    }
   }
 
   addService(service: IService) {
@@ -118,11 +171,13 @@ export const serviceActions = new ServiceActions();
 const getDefaultRuntimeState = (serviceId: string): RuntimeState => ({
   webview: null,
   timer: null,
-  lastPoll: 0,
+  lastPoll: Date.now(),
   isMediaPlaying: false,
   isHibernating: false,
   isLoading: true,
   isError: false,
+  lastHibernated: null,
+  lastUsed: Date.now(),
   shareWithWebview: {
     id: serviceId,
     spellcheckerLanguage: '',

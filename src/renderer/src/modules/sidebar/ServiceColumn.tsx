@@ -1,9 +1,10 @@
 import { PopoverProps } from "@radix-ui/react-popover";
 import { Popover, PopoverContent, PopoverTrigger } from "@renderer/components/ui/popover";
+import { cn } from "@renderer/lib/utils";
 import { useActiveServiceId, useServicesData } from "@renderer/store/services/hooks";
 import { serviceActions } from "@renderer/store/services/store";
 import { IService } from "@renderer/store/services/types";
-import { ArrowLeft, ArrowRight, Delete, EarIcon, Home, Link2Icon, MoreVertical, NotebookIcon, PlusCircle, RefreshCcw, Twitter, Youtube } from "lucide-react";
+import { ArrowLeft, ArrowRight, Delete, EarIcon, Globe, Home, Link2Icon, MoreVertical, NotebookIcon, PlusCircle, RefreshCcw } from "lucide-react";
 import { FC, PropsWithChildren, useCallback, useEffect, useState } from "react";
 interface ServiceComponentProps extends PopoverProps {
   service: IService
@@ -11,6 +12,10 @@ interface ServiceComponentProps extends PopoverProps {
   onActivate?: (id: string) => void;
   open: boolean;
   setOpen: (open: boolean) => void;
+}
+
+const ServiceIcon = ({ iconUrl, className }: { iconUrl?: string | null, className?: string }) => {
+  return iconUrl ? <img src={iconUrl} className={cn('w-5', className)} /> : <Globe className={cn("w-5", className)} />
 }
 
 const ServiceComponent = ({ service, children, isActive, onActivate, open, setOpen, ...props }: PropsWithChildren<ServiceComponentProps>) => {
@@ -29,7 +34,7 @@ const ServiceComponent = ({ service, children, isActive, onActivate, open, setOp
         e.stopPropagation()
         setOpen(true)
       }}>
-      <div className='relative w-full flex items-center justify-center'>
+      <div className='relative w-full h-10 flex items-center justify-center'>
         {isActive && <div className='absolute left-0 w-[3px] h-8 top-1 bg-gray-400 rounded-r-md'></div>}
         {children}
       </div>
@@ -40,10 +45,10 @@ const ServiceComponent = ({ service, children, isActive, onActivate, open, setOp
       <div className="flex flex-col gap-4">
         <div className="flex justify-between w-full">
           <div className="flex gap-1">
-            <div><Twitter /></div>
+            <ServiceIcon iconUrl={service.iconUrl} className="h-8 w-auto" />
             <div>
               <div className="text-sm">{service.name}</div>
-              <div className="text-xs">X. It's what's happening</div>
+              <div className="text-xs">{/* X. It's what's happening TODO: show title */}</div>
             </div>
           </div>
           <div className="flex gap-3">
@@ -88,7 +93,7 @@ export const ServiceColumn: FC = () => {
     setOpenPopover(open ? name : null)
   }, [openPopover])
 
-  return <div className='flex-1 flex flex-col items-center w-full pt-2'>
+  return <div className='flex-1 flex flex-col items-center w-full pt-2 select-none'>
     {
       services?.map((service) => <ServiceComponent
         key={service.serviceId}
@@ -98,7 +103,7 @@ export const ServiceColumn: FC = () => {
         open={openPopover === service.serviceId}
         setOpen={(open) => setOpen(service.serviceId, open)}
       >
-        <Youtube className='w-4 h-10' />
+        <ServiceIcon iconUrl={service.iconUrl} />
       </ServiceComponent>)
     }
     <PlusCircle className='w-4 h-10'
@@ -107,3 +112,4 @@ export const ServiceColumn: FC = () => {
       }} />
   </div>
 }
+

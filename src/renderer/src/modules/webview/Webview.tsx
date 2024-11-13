@@ -2,6 +2,8 @@ import { serviceActions } from '@renderer/store/services/store';
 import { ElectronWebView } from '@renderer/store/services/types';
 import { FC, useEffect, useRef } from 'react';
 import { IService } from '@renderer/store/services/types';
+
+
 interface WebviewProps {
   service: IService
 }
@@ -9,6 +11,19 @@ export const Webview: FC<WebviewProps> = ({ service }) => {
   const webViewRef = useRef<ElectronWebView | null>(null)
 
   const didFinishLoad = () => {
+    if (!service.iconUrl) {
+      webViewRef.current?.executeJavaScript(`
+        let iconLink = document.querySelector('link[rel="icon"]') || document.querySelector('link[rel="shortcut icon"]');
+      iconLink ? iconLink.href : '${webViewRef.current?.src}/favicon.ico';
+    `).then(async iconUrl => {
+        const cachedIcon = await window.electron.ipcRenderer.invoke('download-icon', { serviceName: service.name, iconUrl })
+        if (cachedIcon) {
+          serviceActions.updateService(service, 'iconUrl', cachedIcon)
+        }
+      }).catch(error => {
+        console.error('获取 favicon 出错:', error);
+      });
+    }
     serviceActions.updateRuntimeState(service, 'isLoading', false)
   }
   const didAttach = () => {
@@ -37,6 +52,12 @@ export const Webview: FC<WebviewProps> = ({ service }) => {
     }
   }, [])
   return <webview
+    // @ts-ignore
+    allowpopups="true"
+    // @ts-ignore
+    nodeintegration="true"
+    webpreferences={`spellcheck=${service.shareWithWebview.spellcheckerLanguage ? 1 : 0
+      }, contextIsolation=1`}
     ref={(_webviewRef: ElectronWebView) => {
       webViewRef.current = _webviewRef
     }}

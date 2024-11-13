@@ -1,9 +1,9 @@
 // import { cleanseJSObject } from "@renderer/lib/jsUtils";
 import { Services } from "@prisma/client";
 import { createZustandStore } from "../utils/helper";
-import { IService, RuntimeState, ServiceState } from "./types";
+import { IService, RUNTIME_STATE_KEYS, RuntimeState, ServiceState } from "./types";
 import ms from "ms";
-import { debounce } from "lodash-es";
+import { debounce, omit } from "lodash-es";
 // import ms from 'ms';
 
 export const useServiceStore = createZustandStore<ServiceState>("service")(() => ({
@@ -115,7 +115,7 @@ class ServiceActions {
 
   updateService<K extends keyof Services>(service: IService, key: K, value: Services[K]) {
     // TODO: 修改数据库
-
+    window.electron.ipcRenderer.invoke('db:updateService', { ...omit(service, ...RUNTIME_STATE_KEYS, 'id'), [key]: value })
     set((state) => ({ services: state.services.map(s => s.serviceId === service.serviceId ? { ...s, [key]: value } : s) }))
   }
   updateRuntimeState<K extends keyof RuntimeState>(service: IService, key: K, value: RuntimeState[K]) {

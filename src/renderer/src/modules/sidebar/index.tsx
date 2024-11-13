@@ -2,11 +2,20 @@ import { FC, useCallback, useEffect, useState } from 'react';
 import { PinIcon, ArrowRightIcon, MoreHorizontalIcon, PinOff } from 'lucide-react';
 import { useShowContextMenu } from '@renderer/atoms/context-menu';
 import { ServiceColumn } from './ServiceColumn';
+import { shortcuts } from '@renderer/constants/shortcuts';
+import { useHotkeys } from 'react-hotkeys-hook';
+import { HotKeyScopeMap } from '@renderer/constants/hotkeys';
 
 export const Sidebar: FC = () => {
   const { ipcRenderer } = window.electron;
 
   const [windowState, setWindowState] = useState({ isPin: false, isShowing: true })
+
+  useHotkeys(shortcuts.home.pinWindow.key, () => {
+    ipcRenderer.send('set-pin', !windowState.isPin);
+  }, {
+    scopes: HotKeyScopeMap.Home,
+  })
 
   const showContextMenu = useShowContextMenu()
 

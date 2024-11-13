@@ -1,16 +1,19 @@
 import { PopoverProps } from "@radix-ui/react-popover";
 import { Popover, PopoverContent, PopoverTrigger } from "@renderer/components/ui/popover";
-import { cn } from "@renderer/lib/utils";
+import { HotKeyScopeMap } from "@renderer/constants/hotkeys";
+import { cn, getOS } from "@renderer/lib/utils";
 import { useActiveServiceId, useServicesData } from "@renderer/store/services/hooks";
 import { serviceActions } from "@renderer/store/services/store";
 import { IService } from "@renderer/store/services/types";
 import { ArrowLeft, ArrowRight, Delete, EarIcon, Globe, Home, Link2Icon, MoreVertical, NotebookIcon, PlusCircle, RefreshCcw } from "lucide-react";
 import { FC, PropsWithChildren, useCallback, useEffect, useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 interface ServiceComponentProps extends PopoverProps {
   service: IService
   isActive?: boolean
   onActivate?: (id: string) => void;
   open: boolean;
+  shortcut: string
   setOpen: (open: boolean) => void;
 }
 
@@ -18,7 +21,17 @@ const ServiceIcon = ({ iconUrl, className }: { iconUrl?: string | null, classNam
   return iconUrl ? <img src={iconUrl} className={cn('w-5', className)} /> : <Globe className={cn("w-5", className)} />
 }
 
-const ServiceComponent = ({ service, children, isActive, onActivate, open, setOpen, ...props }: PropsWithChildren<ServiceComponentProps>) => {
+const ServiceComponent = ({ service, shortcut, children, isActive, onActivate, open, setOpen, ...props }: PropsWithChildren<ServiceComponentProps>) => {
+  const finalShortcut = getOS() === "Windows" ? shortcut?.replace("meta", "ctrl").replace("Meta", "Ctrl") : shortcut
+
+  useHotkeys(finalShortcut, (e) => {
+    e.preventDefault()
+    if (isActive) {
+      setOpen(!open)
+    } else {
+      onActivate?.(service.serviceId)
+    }
+  }, { scopes: HotKeyScopeMap.Home })
 
   return <Popover modal open={open} onOpenChange={setOpen} {...props}>
     <PopoverTrigger
@@ -95,9 +108,10 @@ export const ServiceColumn: FC = () => {
 
   return <div className='flex-1 flex flex-col items-center w-full pt-2 select-none'>
     {
-      services?.map((service) => <ServiceComponent
+      services?.map((service, index) => <ServiceComponent
         key={service.serviceId}
         service={service}
+        shortcut={`${index + 1}`}
         isActive={id === service.serviceId}
         onActivate={serviceActions.setActive}
         open={openPopover === service.serviceId}

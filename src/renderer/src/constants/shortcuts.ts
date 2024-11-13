@@ -4,5 +4,9 @@ export const shortcuts = {
       name: "keys.home.closeWindow",
       key: "Escape",
     },
+    pinWindow: {
+      name: "keys.home.pinWindow",
+      key: "Meta+P",
+    },
   }
 }

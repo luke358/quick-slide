@@ -10,15 +10,14 @@ export default function Home() {
   const serviceUsed = useServiceUsed()
   const { isLoading, services } = useServicesData()
   const activeServiceId = useActiveServiceId()
-  console.log(serviceUsed);
-  
+
   useHotkeys(shortcuts.home.closeWindow.key, () => {
     ipcRenderer.send('set-showing', false);
   }, {
     scopes: HotKeyScopeMap.Home,
   })
 
-  return isLoading ? <div>Loading...</div> : <div className="flex flex-row h-full">
+  return isLoading ? <div className="w-full h-full bg-white">Loading...</div> : <div className="flex flex-row h-full bg-white">
     <Sidebar />
     <div className="flex-1 relative">
       {services.map(service => <div key={service.serviceId} className="h-full w-full" style={{

@@ -30,6 +30,7 @@ function createWindow(): void {
     visualEffectState: 'active',  // macOS
     ...(process.platform === 'linux' ? { icon } : {}),
     hiddenInMissionControl: true,
+    closable: false,
     webPreferences: {
       preload: join(__dirname, '../preload/index.mjs'),
       sandbox: false,

@@ -18,8 +18,16 @@ export async function initTestData() {
       name: 'Youtube',
       recipeId: 'youtube',
       settings: '{}',
-      serviceUrl: 'https://www.youtube.com',
-      defaultIconUrl: 'https://www.youtube.com/favicon.ico',
+      serviceUrl: 'https://www.discord.com',
+      defaultIconUrl: 'https://www.discord.com/favicon.ico',
+    },
+    {
+      serviceId: 'e174d31d-1fc9-4314-ab9e-cd8656e59f1f',
+      name: 'Binance',
+      recipeId: 'binance',
+      settings: '{}',
+      serviceUrl: 'https://www.binance.com/',
+      defaultIconUrl: 'https://www.binance.com/favicon.ico',
     },
   ]
   const count = await prisma.services.findMany()

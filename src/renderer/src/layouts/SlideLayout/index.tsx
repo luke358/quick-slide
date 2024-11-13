@@ -3,6 +3,7 @@ import './index.css'
 import { useEffect } from "react";
 import { useState } from "react";
 
+const { ipcRenderer } = window.electron
 export default function SlideLayout() {
   const [isHiding, setIsHiding] = useState(false);
 
@@ -21,7 +22,12 @@ export default function SlideLayout() {
     }
   }, [])
 
-  return <div className={`slide-layout ${isHiding ? 'hiding' : ''}`}>
-    <Outlet />
+  return <div className={`flex slide-layout ${isHiding ? 'hiding' : ''}`}>
+    <div className="flex-1">
+      <Outlet />
+    </div>
+    <div className="slide-layout-mask w-[10px] bg-transparent" onClick={() => {
+      ipcRenderer.send('set-showing', false);
+    }}></div>
   </div>
 }

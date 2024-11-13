@@ -14,7 +14,7 @@ function createWindow(): void {
   mainWindow = new BrowserWindow({
     width: WINDOW_WIDTH,
     height: 800,
-    x: screenWidth - WINDOW_WIDTH - 10,
+    x: screenWidth - WINDOW_WIDTH,
     y: 100,
     frame: false,
     hasShadow: false,
@@ -102,7 +102,7 @@ function startMouseTracking() {
     } else if (deltaX >= 40 && x >= width - 2 && isShowing && !hideTimeout && !isPin) {
       handleHideWindow();
     }
-  }, 200);
+  }, 100);
 }
 
 async function updateWindowState(newState) {
@@ -127,7 +127,7 @@ function handleHideWindow() {
   hideTimeout = setTimeout(() => {
     mainWindow?.hide();
     hideTimeout = null;  // 清除 timeout 引用
-  }, 300)
+  }, 500)
 }
 
 // This method will be called when Electron has finished

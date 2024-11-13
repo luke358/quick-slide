@@ -68,7 +68,7 @@ const ServiceComponent = ({ service, children, isActive, onActivate, open, setOp
 const { ipcRenderer } = window.electron
 export const ServiceColumn: FC = () => {
   const [openPopover, setOpenPopover] = useState<string | null>(null)
-  const { services } = useServicesData()
+  const services = useServicesData()
   const id = useActiveServiceId()
 
   useEffect(() => {

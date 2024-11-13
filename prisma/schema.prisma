@@ -11,14 +11,16 @@ datasource db {
 }
 
 model Services {
-  id             Int      @id @default(autoincrement())
-  serviceId      String   @unique
-  name           String
-  recipeId       String
-  settings       String
-  serviceUrl     String
-  iconUrl        String?
-  defaultIconUrl String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id                 Int      @id @default(autoincrement())
+  serviceId          String   @unique
+  name               String
+  recipeId           String
+  settings           String
+  serviceUrl         String
+  iconUrl            String?
+  defaultIconUrl     String?
+  isHibernateEnabled Boolean  @default(false)
+  enabled            Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }

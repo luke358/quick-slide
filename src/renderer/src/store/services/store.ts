@@ -1,6 +1,7 @@
 // import { cleanseJSObject } from "@renderer/lib/jsUtils";
+import { Services } from "@prisma/client";
 import { createZustandStore } from "../utils/helper";
-import { IService, ServiceState } from "./types";
+import { ElectronWebView, IService, RUNTIME_STATE_KEYS, RuntimeState, ServiceState } from "./types";
 // import ms from 'ms';
 
 export const useServiceStore = createZustandStore<ServiceState>("service")(() => ({
@@ -33,14 +34,14 @@ class ServiceActions {
 
   async fetchServices() {
     const services = await window.electron.ipcRenderer.invoke('db:getServices') as IService[]
-
+    const mergedServices = mergeServiceData(services, get().services)
     const activeServiceId = get().activeServiceId ? get().activeServiceId : services?.[0]?.serviceId
     if (activeServiceId) {
-      set((state) => ({ services, activeServiceId, serviceUsed: new Set(state.serviceUsed).add(activeServiceId) }))
+      set((state) => ({ services: mergedServices, activeServiceId, serviceUsed: new Set(state.serviceUsed).add(activeServiceId) }))
     } else {
-      set(() => ({ services, activeServiceId: null, serviceUsed: new Set() }))
+      set(() => ({ services: mergedServices, activeServiceId: null, serviceUsed: new Set() }))
     }
-    return services
+    return mergedServices
   }
 
   addService(service: IService) {
@@ -57,6 +58,15 @@ class ServiceActions {
     //   services.delete(id);
     //   return { services };
     // });
+  }
+
+  updateService<K extends keyof Services>(service: IService, key: K, value: Services[K]) {
+    // TODO: 修改数据库
+
+    set((state) => ({ services: state.services.map(s => s.serviceId === service.serviceId ? { ...s, [key]: value } : s) }))
+  }
+  updateRuntimeState<K extends keyof RuntimeState>(service: IService, key: K, value: RuntimeState[K]) {
+    set((state) => ({ services: state.services.map(s => s.serviceId === service.serviceId ? { ...s, [key]: value } : s) }))
   }
 
 
@@ -103,3 +113,43 @@ class ServiceActions {
 }
 
 export const serviceActions = new ServiceActions();
+
+
+const getDefaultRuntimeState = (serviceId: string): RuntimeState => ({
+  webview: null,
+  timer: null,
+  lastPoll: 0,
+  isMediaPlaying: false,
+  isHibernating: false,
+  isLoading: true,
+  isError: false,
+  shareWithWebview: {
+    id: serviceId,
+    spellcheckerLanguage: '',
+    isDarkModeEnabled: false
+  }
+})
+
+export const mergeServiceData = (newServices: IService[], existingServices: IService[]): IService[] => {
+  return newServices.map(newService => {
+    const existingService = existingServices.find(s => s.serviceId === newService.serviceId)
+    if (!existingService) {
+      return {
+        ...newService,
+        ...getDefaultRuntimeState(newService.serviceId)
+      }
+    }
+
+    return {
+      ...newService,
+      webview: existingService.webview,
+      timer: existingService.timer,
+      lastPoll: existingService.lastPoll,
+      isMediaPlaying: existingService.isMediaPlaying,
+      isHibernating: existingService.isHibernating,
+      isLoading: existingService.isLoading,
+      isError: existingService.isError,
+      shareWithWebview: existingService.shareWithWebview
+    }
+  })
+}

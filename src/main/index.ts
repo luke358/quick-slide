@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain, screen, MenuItemConstructorOptions, Menu } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, screen, MenuItemConstructorOptions, Menu, globalShortcut } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -30,7 +30,6 @@ function createWindow(): void {
     visualEffectState: 'active',  // macOS
     ...(process.platform === 'linux' ? { icon } : {}),
     hiddenInMissionControl: true,
-    closable: false,
     webPreferences: {
       preload: join(__dirname, '../preload/index.mjs'),
       sandbox: false,
@@ -135,6 +134,9 @@ function handleHideWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
+  globalShortcut.register('CommandOrControl+W', () => {
+    return false
+  })
   await registerDatabaseIPC()
   app.dock.hide(); // 隐藏 Dock 图标
 

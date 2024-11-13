@@ -1,14 +1,17 @@
-import { ServiceView } from "@renderer/components/ServiceView";
+import { ServiceView } from "@renderer/modules/webview/ServiceView";
 import { HotKeyScopeMap } from "@renderer/constants/hotkeys";
 import { shortcuts } from "@renderer/constants/shortcuts";
 import { Sidebar } from "@renderer/modules/sidebar";
 import { useActiveServiceId, useServiceUsed, useServicesData } from "@renderer/store/services/hooks";
 import { useHotkeys } from "react-hotkeys-hook";
+import { Queries } from "@renderer/queries";
 
 export default function Home() {
+  const { isLoading } = Queries.servicesQuery.services()
+
   const { ipcRenderer } = window.electron
   const serviceUsed = useServiceUsed()
-  const { isLoading, services } = useServicesData()
+  const services = useServicesData()
   const activeServiceId = useActiveServiceId()
 
   useHotkeys(shortcuts.home.closeWindow.key, () => {
@@ -17,7 +20,7 @@ export default function Home() {
     scopes: HotKeyScopeMap.Home,
   })
 
-  return isLoading ? <div className="w-full h-full bg-white">Loading...</div> : <div className="flex flex-row h-full bg-white">
+  return isLoading ? <div className="w-full h-full bg-[#121212]">Loading...</div> : <div className="flex flex-row h-full bg-[#121212]">
     <Sidebar />
     <div className="flex-1 relative">
       {services.map(service => <div key={service.serviceId} className="h-full w-full" style={{

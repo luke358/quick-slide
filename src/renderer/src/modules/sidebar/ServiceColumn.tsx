@@ -15,14 +15,15 @@ interface ServiceComponentProps extends PopoverProps {
 const ServiceComponent = ({ service, children, isActive, onActivate, open, setOpen, ...props }: PropsWithChildren<ServiceComponentProps>) => {
 
   return <Popover modal open={open} onOpenChange={setOpen} {...props}>
-    <PopoverTrigger asChild onClick={(e) => {
-      e.preventDefault()
-      if (isActive) {
-        setOpen(!open)
-      } else {
-        onActivate?.()
-      }
-    }}
+    <PopoverTrigger
+      asChild onClick={(e) => {
+        e.preventDefault()
+        if (isActive) {
+          setOpen(!open)
+        } else {
+          onActivate?.()
+        }
+      }}
       onContextMenu={(e) => {
         e.stopPropagation()
         setOpen(true)
@@ -32,7 +33,9 @@ const ServiceComponent = ({ service, children, isActive, onActivate, open, setOp
         {children}
       </div>
     </PopoverTrigger>
-    <PopoverContent side="right" align="start" alignOffset={5} className="backdrop-blur-3xl bg-black/40 shadow-md outline-none border-none text-white pt-3 pb-4">
+    <PopoverContent
+      onEscapeKeyDown={(e) => e.stopPropagation()}
+      side="right" align="start" alignOffset={5} className="backdrop-blur-3xl bg-black/40 shadow-md outline-none border-none text-white pt-3 pb-4">
       <div className="flex flex-col gap-4">
         <div className="flex justify-between w-full">
           <div className="flex gap-1">
@@ -106,6 +109,6 @@ export const ServiceColumn: FC = () => {
       open={openPopover === 'Youtube'}
       setOpen={(open) => setOpen('Youtube', open)}>
       <Youtube className='w-4 h-10' />
-    </ServiceComponent> 
+    </ServiceComponent>
   </div>
 }

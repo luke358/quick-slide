@@ -1,16 +1,23 @@
-// import { cleanseJSObject } from "@renderer/lib/jsUtils";
 import { Services } from "@prisma/client";
 import { createZustandStore } from "../utils/helper";
 import { IService, RUNTIME_STATE_KEYS, RuntimeState, ServiceState } from "./types";
 import ms from "ms";
+import { persist } from 'zustand/middleware'
 import { debounce, omit } from "lodash-es";
-// import ms from 'ms';
 
-export const useServiceStore = createZustandStore<ServiceState>("service")(() => ({
-  active: 'Twitter',
+const initialState = {
   services: [],
   serviceUsed: new Set<string>(),
   activeServiceId: null,
+  lastServiceUrls: {}
+};
+
+export const useServiceStore = createZustandStore<ServiceState>("service")(persist(
+  (_) => initialState, {
+  name: 'service',
+  partialize: (state) => ({
+    lastServiceUrls: state.lastServiceUrls
+  })
 }))
 
 const get = useServiceStore.getState;
@@ -113,12 +120,15 @@ class ServiceActions {
   }
 
   async removeService(serviceId: string) {
-    await window.electron.ipcRenderer.invoke('db:deleteService', serviceId)
     const services = get().services.filter(service => service.serviceId !== serviceId)
+    if (!services) return;
+    const lastServiceUrls = { ...get().lastServiceUrls };
+    delete lastServiceUrls[serviceId]
+    await window.electron.ipcRenderer.invoke('db:deleteService', serviceId)
     if (get().activeServiceId === serviceId) {
-      set(() => ({ activeServiceId: services[0]?.serviceId }))
+      set(() => ({ activeServiceId: services[0]?.serviceId, lastServiceUrls }))
     }
-    set(() => ({ services }))
+    set(() => ({ services, lastServiceUrls }))
   }
 
   updateService<K extends keyof Services>(service: IService, key: K, value: Services[K]) {
@@ -128,6 +138,19 @@ class ServiceActions {
   }
   updateRuntimeState<K extends keyof RuntimeState>(service: IService, key: K, value: RuntimeState[K]) {
     set((state) => ({ services: state.services.map(s => s.serviceId === service.serviceId ? { ...s, [key]: value } : s) }))
+  }
+
+  updatelastServiceUrls(service: IService, url?: string) {
+    if (!url) {
+      set((state) => {
+        const lastServiceUrls = state.lastServiceUrls
+        delete lastServiceUrls[service.serviceId]
+        return lastServiceUrls
+      })
+    } else {
+      set((state) => ({ lastServiceUrls: { ...state.lastServiceUrls, [service.serviceId]: url } }))
+
+    }
   }
 
 

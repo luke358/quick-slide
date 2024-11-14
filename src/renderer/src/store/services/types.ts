@@ -44,4 +44,5 @@ export interface ServiceState {
   services: IService[];
   activeServiceId: string | null;
   serviceUsed: Set<string>;
+  lastServiceUrls: Record<string, string>;
 }

@@ -18,10 +18,10 @@ export async function initTestData() {
     },
     {
       serviceId: 'e174d31d-1fc9-4314-ab9e-cd8656e59f1c',
-      name: 'Youtube',
-      recipeId: 'youtube',
+      name: 'Discord',
+      recipeId: 'discord',
       settings: '{}',
-      serviceUrl: 'https://www.discord.com',
+      serviceUrl: 'https://www.discord.com/app',
       defaultIconUrl: 'https://www.discord.com/favicon.ico',
     },
     {

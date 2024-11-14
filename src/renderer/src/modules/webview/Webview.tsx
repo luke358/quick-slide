@@ -2,6 +2,8 @@ import { serviceActions } from '@renderer/store/services/store';
 import { ElectronWebView } from '@renderer/store/services/types';
 import { FC, useEffect, useRef } from 'react';
 import { IService } from '@renderer/store/services/types';
+import { DidNavigateEvent, DidNavigateInPageEvent } from 'electron';
+import { uselastServiceUrls } from '@renderer/store/services/hooks';
 
 
 interface WebviewProps {
@@ -9,7 +11,7 @@ interface WebviewProps {
 }
 export const Webview: FC<WebviewProps> = ({ service }) => {
   const webViewRef = useRef<ElectronWebView | null>(null)
-
+  const lastServiceUrls = uselastServiceUrls()
   const didFinishLoad = () => {
     if (!service.iconUrl) {
       webViewRef.current?.executeJavaScript(`
@@ -29,7 +31,6 @@ export const Webview: FC<WebviewProps> = ({ service }) => {
   }
   const didAttach = () => {
     serviceActions.updateRuntimeState(service, 'webview', webViewRef.current)
-
   }
   const didFailLoad = () => {
     serviceActions.updateRuntimeState(service, 'isLoading', false)
@@ -40,16 +41,38 @@ export const Webview: FC<WebviewProps> = ({ service }) => {
   const mediaPaused = () => {
     serviceActions.updateRuntimeState(service, 'isMediaPlaying', false)
   }
+
+  const didNavigateInPage = (event: DidNavigateInPageEvent | DidNavigateEvent) => {
+    const normalizeUrl = (url: string) => url.replace(/\/$/, '');
+
+    const eventUrl = event.url ? normalizeUrl(event.url) : '';
+    const serviceUrl = normalizeUrl(service.serviceUrl);
+
+    if (eventUrl && serviceUrl !== eventUrl) {
+      serviceActions.updatelastServiceUrls(service, eventUrl)
+    } else {
+      serviceActions.updatelastServiceUrls(service)
+    }
+  }
+
   useEffect(() => {
-    webViewRef?.current?.addEventListener('did-finish-load', didFinishLoad)
+    webViewRef?.current?.addEventListener('dom-ready', didFinishLoad)
     webViewRef.current?.addEventListener('did-attach', didAttach)
     webViewRef.current?.addEventListener('did-fail-load', didFailLoad)
     webViewRef.current?.addEventListener('media-started-playing', mediaStartedPlaying)
     webViewRef.current?.addEventListener('media-paused', mediaPaused)
+    webViewRef.current?.addEventListener('did-navigate-in-page', didNavigateInPage)
+    webViewRef.current?.addEventListener('did-navigate', didNavigateInPage)
     return () => {
-      webViewRef?.current?.removeEventListener('did-finish-load', didFinishLoad)
+      webViewRef?.current?.removeEventListener('dom-ready', didFinishLoad)
       webViewRef.current?.removeEventListener('did-attach', didAttach)
       webViewRef.current?.removeEventListener('did-fail-load', didFailLoad)
+      webViewRef.current?.removeEventListener('media-started-playing', mediaStartedPlaying)
+      webViewRef.current?.removeEventListener('media-paused', mediaPaused)
+      webViewRef.current?.removeEventListener('did-navigate-in-page', didNavigateInPage)
+      webViewRef.current?.removeEventListener('did-navigate', didNavigateInPage)
+
+
     }
   }, [])
   return <webview
@@ -62,6 +85,6 @@ export const Webview: FC<WebviewProps> = ({ service }) => {
     ref={(_webviewRef: ElectronWebView) => {
       webViewRef.current = _webviewRef
     }}
-    className='w-full h-full' src={service.serviceUrl}
+    className='w-full h-full' src={lastServiceUrls[service.serviceId] || service.serviceUrl}
   />
 }

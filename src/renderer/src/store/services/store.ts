@@ -30,6 +30,12 @@ class ServiceActions {
     this.serviceMaintenanceTick()
   }
 
+  toggleMute(serviceId: string) {
+    const service = this._one(serviceId);
+    if (!service) return;
+    this.updateService(service, 'isMuted', !service.isMuted)
+    service.webview?.setAudioMuted(!service.isMuted)
+  }
   setActive(id: string) {
     const activeServiceId = get().activeServiceId;
     set((state) => ({
@@ -43,19 +49,6 @@ class ServiceActions {
     }));
   }
 
-  // Fetch
-
-  async fetchServices() {
-    const services = await window.electron.ipcRenderer.invoke('db:getServices') as IService[]
-    const mergedServices = mergeServiceData(services, get().services)
-    const activeServiceId = get().activeServiceId ? get().activeServiceId : services?.[0]?.serviceId
-    if (activeServiceId) {
-      set((state) => ({ services: mergedServices, activeServiceId, serviceUsed: new Set(state.serviceUsed).add(activeServiceId) }))
-    } else {
-      set(() => ({ services: mergedServices, activeServiceId: null, serviceUsed: new Set() }))
-    }
-    return mergedServices
-  }
   _one(id: string): IService {
     return get().services.find(service => service.serviceId === id) as IService;
   }
@@ -97,6 +90,20 @@ class ServiceActions {
     }
   }
 
+  // Fetch
+
+  async fetchServices() {
+    const services = await window.electron.ipcRenderer.invoke('db:getServices') as IService[]
+    const mergedServices = mergeServiceData(services, get().services)
+    const activeServiceId = get().activeServiceId ? get().activeServiceId : services?.[0]?.serviceId
+    if (activeServiceId) {
+      set((state) => ({ services: mergedServices, activeServiceId, serviceUsed: new Set(state.serviceUsed).add(activeServiceId) }))
+    } else {
+      set(() => ({ services: mergedServices, activeServiceId: null, serviceUsed: new Set() }))
+    }
+    return mergedServices
+  }
+
   addService(service: IService) {
     // set(state => {
     //   const services = new Map(state.services);
@@ -105,12 +112,13 @@ class ServiceActions {
     // });
   }
 
-  removeService(id: string) {
-    // set(state => {
-    //   const services = new Map(state.services);
-    //   services.delete(id);
-    //   return { services };
-    // });
+  async removeService(serviceId: string) {
+    await window.electron.ipcRenderer.invoke('db:deleteService', serviceId)
+    const services = get().services.filter(service => service.serviceId !== serviceId)
+    if (get().activeServiceId === serviceId) {
+      set(() => ({ activeServiceId: services[0]?.serviceId }))
+    }
+    set(() => ({ services }))
   }
 
   updateService<K extends keyof Services>(service: IService, key: K, value: Services[K]) {

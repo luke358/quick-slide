@@ -5,7 +5,7 @@ import { cn, getOS } from "@renderer/lib/utils";
 import { useActiveServiceId, useServicesData } from "@renderer/store/services/hooks";
 import { serviceActions } from "@renderer/store/services/store";
 import { IService } from "@renderer/store/services/types";
-import { ArrowLeft, ArrowRight, Delete, EarIcon, Globe, Home, Link2Icon, MoreVertical, NotebookIcon, PlusCircle, RefreshCcw } from "lucide-react";
+import { ArrowLeft, ArrowRight, Globe, Home, Link2Icon, MoreVertical, NotebookIcon, PlusCircle, RefreshCcw, Trash2, Volume1 } from "lucide-react";
 import { FC, PropsWithChildren, useCallback, useEffect, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 interface ServiceComponentProps extends PopoverProps {
@@ -67,8 +67,15 @@ const ServiceComponent = ({ service, shortcut, children, isActive, onActivate, o
             </div>
           </div>
           <div className="flex gap-3">
-            <div><EarIcon size={14} /></div>
-            <div><Delete size={14} /></div>
+            <div><Volume1 size={14} className={cn({ 'text-blue-600': !service.isMuted })}
+              onClick={() => {
+                serviceActions.toggleMute(service.serviceId)
+              }} /></div>
+            <div onClick={() => {
+              serviceActions.removeService(service.serviceId)
+            }}>
+              <Trash2 size={14} />
+            </div>
           </div>
         </div>
         <div className="flex justify-between items-center w-full">

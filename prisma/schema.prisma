@@ -20,6 +20,7 @@ model Services {
   iconUrl            String?
   defaultIconUrl     String?
   isHibernateEnabled Boolean  @default(false)
+  isMuted            Boolean  @default(false)
   enabled            Boolean  @default(true)
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt

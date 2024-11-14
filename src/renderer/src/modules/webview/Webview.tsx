@@ -25,6 +25,7 @@ export const Webview: FC<WebviewProps> = ({ service }) => {
       });
     }
     serviceActions.updateRuntimeState(service, 'isLoading', false)
+    service.webview?.setAudioMuted(service.isMuted)
   }
   const didAttach = () => {
     serviceActions.updateRuntimeState(service, 'webview', webViewRef.current)

@@ -59,6 +59,12 @@ export async function registerDatabaseIPC() {
     })
   })
 
+  ipcMain.handle('db:deleteService', async (_, serviceId) => {
+    return await prisma.services.delete({
+      where: { serviceId }
+    })
+  })
+
 
   ipcMain.handle('download-icon', async (_, { serviceName, iconUrl }) => {
     try {

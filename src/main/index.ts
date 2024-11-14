@@ -48,7 +48,7 @@ function createWindow(): void {
 
   mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true, skipTransformProcessType: true });
 
-  mainWindow.setAlwaysOnTop(true, 'screen-saver');
+  mainWindow.setAlwaysOnTop(true, 'floating', 1);
 
   mainWindow.setWindowButtonVisibility(false)
 
@@ -70,11 +70,6 @@ function createWindow(): void {
 
   startMouseTracking();
 
-  mainWindow.webContents.on('blur', () => {
-    // mainWindow?.webContents.send('window-blur')
-    if (isPin || !isShowing) return;
-    handleHideWindow();
-  })
 }
 
 let isPin = store.get('window.isPin') as boolean
@@ -94,8 +89,8 @@ function startMouseTracking() {
     // 鼠标靠近屏幕右侧触发窗口滑出
     // 鼠标移动超过边界50px触发
     if (deltaX >= 40 && x >= width - 2 && !isShowing && !hideTimeout) {
-      mainWindow?.focus();
-      mainWindow?.show();
+      mainWindow?.showInactive();
+      app.focus({ steal: true })
       lastX = Infinity;
       updateWindowState({ isShowing: true })
       mainWindow?.webContents.send('window-showing')
@@ -172,7 +167,7 @@ app.whenReady().then(async () => {
     const normalizedMenuItems = normalizeMenuItems(value.items, { sender: mainWindow?.webContents! })
     const menu = Menu.buildFromTemplate(normalizedMenuItems)
     menu.popup({
-      callback: () => defer.resolve(),
+      callback: () => defer.resolve()
     })
     return defer.promise
   })
@@ -216,6 +211,10 @@ app.on('window-all-closed', () => {
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
 
+app.on('browser-window-blur', () => {
+  if (isPin || !isShowing) return;
+  handleHideWindow();
+})
 
 type SerializableMenuItem = Omit<MenuItemConstructorOptions, "click" | "submenu"> & {
   // id: string

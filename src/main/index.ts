@@ -21,13 +21,12 @@ function createWindow(): void {
     transparent: true,
     show: false,
     alwaysOnTop: true,
-    type: 'panel',
+    type: 'toolbar',
     skipTaskbar: true,
     fullscreenable: false,
     focusable: true,
     titleBarStyle: 'hidden',
     roundedCorners: false,  // macOS
-    visualEffectState: 'active',  // macOS
     ...(process.platform === 'linux' ? { icon } : {}),
     hiddenInMissionControl: true,
     webPreferences: {
@@ -89,8 +88,7 @@ function startMouseTracking() {
     // 鼠标靠近屏幕右侧触发窗口滑出
     // 鼠标移动超过边界50px触发
     if (deltaX >= 40 && x >= width - 2 && !isShowing && !hideTimeout) {
-      mainWindow?.showInactive();
-      app.focus({ steal: true })
+      mainWindow?.show();
       lastX = Infinity;
       updateWindowState({ isShowing: true })
       mainWindow?.webContents.send('window-showing')

@@ -1,5 +1,6 @@
 import { PopoverProps } from "@radix-ui/react-popover";
 import { Popover, PopoverContent, PopoverTrigger } from "@renderer/components/ui/popover";
+import VerticalSwitch from "@renderer/components/ui/vertical-switch";
 import { HotKeyScopeMap } from "@renderer/constants/hotkeys";
 import { cn, getOS } from "@renderer/lib/utils";
 import { useActiveServiceId, useServicesData } from "@renderer/store/services/hooks";
@@ -63,6 +64,12 @@ const ServiceComponent = ({ service, shortcut, children, isActive, onActivate, o
             </div>
           </div>
           <div className="flex gap-3">
+            <VerticalSwitch
+              checked={service.enabled}
+              onCheckedChange={(checked) => {
+                serviceActions.updateService(service, 'enabled', checked)
+              }}
+            />
             <div><Volume1 size={14} className={cn({ 'text-blue-600': !service.isMuted })}
               onClick={() => {
                 serviceActions.toggleMute(service.serviceId)

@@ -112,7 +112,7 @@ class ServiceActions {
     return mergedServices
   }
 
-  addService(service: IService) {
+  addService(_service: IService) {
     // set(state => {
     //   const services = new Map(state.services);
     //   services.set(service.id, service);
@@ -144,7 +144,7 @@ class ServiceActions {
     }
   }
 
-  _initializeWebviewEvents(service: IService, webview: WebviewTag) {
+  _initializeWebviewEvents(_service: IService, webview: WebviewTag) {
 
     webview?.addEventListener('ipc-message', (e) => {
       switch (e.channel) {

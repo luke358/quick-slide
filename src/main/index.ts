@@ -6,16 +6,18 @@ import { store } from './store';
 import { registerDatabaseIPC } from './db';
 
 let mainWindow: BrowserWindow | null = null;
-const WINDOW_WIDTH = 530;
+let WINDOW_WIDTH = (store.get('window.width') || 530) as number;
+let WINDOW_HEIGHT = (store.get('window.height') || 800) as number;
 function createWindow(): void {
-  const { width: screenWidth } = screen.getPrimaryDisplay().workAreaSize
+  const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize
+  const y = Math.round((screenHeight - WINDOW_HEIGHT) / 2)
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: WINDOW_WIDTH,
-    height: 800,
+    height: WINDOW_HEIGHT,
     x: screenWidth - WINDOW_WIDTH,
-    y: 100,
+    y,
     frame: false,
     hasShadow: false,
     transparent: true,
@@ -29,6 +31,7 @@ function createWindow(): void {
     roundedCorners: false,  // macOS
     ...(process.platform === 'linux' ? { icon } : {}),
     hiddenInMissionControl: true,
+    resizable: true,
     webPreferences: {
       preload: join(__dirname, '../preload/index.mjs'),
       contextIsolation: false,
@@ -37,6 +40,24 @@ function createWindow(): void {
       plugins: true,
     }
   })
+
+  mainWindow.on('resized', () => {
+    const cursorPoint = screen.getCursorScreenPoint();
+    const currentDisplay = screen.getDisplayNearestPoint(cursorPoint);
+    const y = Math.round((currentDisplay.workArea.height - WINDOW_HEIGHT) / 2) + currentDisplay.workArea.y
+    mainWindow?.setBounds({ y }, true)
+  })
+  mainWindow.on('resize', () => {
+    if (!mainWindow) return;
+    const [width, height] = mainWindow.getSize();
+
+    store.set('window', {
+      width,
+      height
+    });
+    WINDOW_WIDTH = width;
+    WINDOW_HEIGHT = height;
+  });
 
   mainWindow.on('ready-to-show', () => {
     mainWindow?.show();
@@ -79,22 +100,42 @@ let hideTimeout: NodeJS.Timeout | null = null;
 let mouseMoveInterval: NodeJS.Timeout | null = null;
 let lastX = Infinity;
 function startMouseTracking() {
-  const { width } = screen.getPrimaryDisplay().workAreaSize;
-
-  // 监听鼠标移动事件
   mouseMoveInterval = setInterval(() => {
-    const { x } = screen.getCursorScreenPoint();
+    const cursorPoint = screen.getCursorScreenPoint();
+    const currentDisplay = screen.getDisplayNearestPoint(cursorPoint);
+    const { x } = cursorPoint;
     const deltaX = x - lastX;
     lastX = Math.min(x, lastX);
 
-    // 鼠标靠近屏幕右侧触发窗口滑出
-    // 鼠标移动超过边界50px触发
-    if (deltaX >= 40 && x >= width - 2 && !isShowing && !hideTimeout) {
+    // 计算在当前屏幕上的最大允许宽度和高度
+    const maxWidth = Math.min(WINDOW_WIDTH, currentDisplay.workArea.width * 0.9);
+    const maxHeight = Math.min(WINDOW_HEIGHT, currentDisplay.workArea.height * 0.9);
+
+    // 鼠标靠近当前屏幕右侧触发窗口滑出
+    if (deltaX >= 40 && x >= currentDisplay.workArea.x + currentDisplay.workArea.width - 2 && !isShowing && !hideTimeout) {
+      // 如果需要调整大小
+      if (WINDOW_WIDTH > maxWidth || WINDOW_HEIGHT > maxHeight) {
+        mainWindow?.setSize(Math.floor(maxWidth), Math.floor(maxHeight));
+        WINDOW_WIDTH = Math.floor(maxWidth);
+        WINDOW_HEIGHT = Math.floor(maxHeight);
+
+        // 保存新的尺寸
+        store.set('window', {
+          ...store.get('window'),
+          width: WINDOW_WIDTH,
+          height: WINDOW_HEIGHT
+        });
+      }
+      // 移动窗口到当前屏幕
+      mainWindow?.setPosition(
+        currentDisplay.workArea.x + currentDisplay.workArea.width - WINDOW_WIDTH,
+        Math.round((currentDisplay.workArea.height - WINDOW_HEIGHT) / 2) + currentDisplay.workArea.y
+      );
       mainWindow?.show();
       lastX = Infinity;
       updateWindowState({ isShowing: true })
       mainWindow?.webContents.send('window-showing')
-    } else if (deltaX >= 40 && x >= width - 2 && isShowing && !hideTimeout && !isPin) {
+    } else if (deltaX >= 40 && x >= currentDisplay.workArea.x + currentDisplay.workArea.width - 2 && isShowing && !hideTimeout && !isPin) {
       handleHideWindow();
     }
   }, 100);

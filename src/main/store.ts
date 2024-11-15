@@ -9,7 +9,9 @@ let db: {
   data: {
     window: {
       isPin: boolean
-      isShowing: boolean
+      isShowing: boolean,
+      width: number,
+      height: number,
     }
   }
   write: () => void
@@ -38,7 +40,8 @@ export const store = {
   },
   set: (path, value) => {
     const db = createOrGetDb()
-    setProperty(db.data, path, value)
+    const oldValue = getProperty(db.data, path)
+    setProperty(db.data, path, Object.assign(oldValue, value))
     db.write()
   },
   has: (path) => {

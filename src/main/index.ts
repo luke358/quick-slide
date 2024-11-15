@@ -156,7 +156,7 @@ app.whenReady().then(async () => {
   });
 
   ipcMain.on('set-pin', async (_, value) => {
-    await updateWindowState({ isPin: value })
+    await updateWindowState({ isPin: value ? value : !isPin })
   })
 
   ipcMain.on('set-showing', async (_, value) => {

@@ -5,8 +5,10 @@ contextBridge.exposeInMainWorld('QuickSlide', {
 })
 
 window.addEventListener('keydown', (event) => {
-  if(event.key === 'Escape') {
+  if (event.key === 'Escape') {
     ipcRenderer.send('set-showing', false)
+  } else if (event.key === 'p' && event.metaKey) {
+    ipcRenderer.send('set-pin')
   } else {
     ipcRenderer.sendToHost('webview-keydown', event.key)
   }

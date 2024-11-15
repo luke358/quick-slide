@@ -105,7 +105,6 @@ const ServiceComponent = ({ service, shortcut, children, isActive, onActivate, o
   </Popover >
 }
 
-const { ipcRenderer } = window.electron
 export const ServiceColumn: FC = () => {
   const [openPopover, setOpenPopover] = useState<string | null>(null)
   const services = useServicesData()
@@ -133,24 +132,30 @@ export const ServiceColumn: FC = () => {
     serviceActions.setActive(serviceId)
   }
 
-  return <div className='flex-1 flex flex-col items-center w-full pt-2 select-none'>
-    {
-      services?.map((service, index) => <ServiceComponent
-        key={service.serviceId}
-        service={service}
-        shortcut={`${index + 1}`}
-        isActive={id === service.serviceId}
-        onActivate={onActivate}
-        open={openPopover === service.serviceId}
-        setOpen={(open) => setOpen(service.serviceId, open)}
-      >
-        <ServiceIcon iconUrl={service.iconUrl} />
-      </ServiceComponent>)
-    }
-    <PlusCircle className='w-4 h-10'
-      onClick={() => {
-        ipcRenderer.invoke('db:createService')
-      }} />
+  return <div className='flex-1 flex flex-col justify-between pt-2 w-full select-none h-full'>
+    <div>
+      {
+        services?.map((service, index) => <ServiceComponent
+          key={service.serviceId}
+          service={service}
+          shortcut={`${index + 1}`}
+          isActive={id === service.serviceId}
+          onActivate={onActivate}
+          open={openPopover === service.serviceId}
+          setOpen={(open) => setOpen(service.serviceId, open)}
+        >
+          <ServiceIcon iconUrl={service.iconUrl} />
+        </ServiceComponent>)
+      }
+    </div>
+    <div className='relative w-full h-10 flex items-center justify-center mb-4'>
+      {!id && <div className='absolute left-0 w-[3px] h-8 top-1 bg-gray-400 rounded-r-md'></div>}
+      <PlusCircle className='w-4 h-10'
+        onClick={() => {
+          serviceActions.setActive(null)
+        }} />
+    </div>
+
   </div>
 }
 

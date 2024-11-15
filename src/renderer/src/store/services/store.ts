@@ -44,7 +44,11 @@ class ServiceActions {
     this.updateService(service, 'isMuted', !service.isMuted)
     service.webview?.setAudioMuted(!service.isMuted)
   }
-  setActive(id: string) {
+  setActive(id: string | null) {
+    if (!id) {
+      set(() => ({ activeServiceId: null }))
+      return;
+    }
     const activeServiceId = get().activeServiceId;
     set((state) => ({
       activeServiceId: id, serviceUsed: new Set(state.serviceUsed).add(id),

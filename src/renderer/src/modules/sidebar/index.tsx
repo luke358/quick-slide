@@ -102,7 +102,7 @@ export const Sidebar: FC = () => {
 
   }, [])
 
-  return <div className="w-8 h-full text-white flex flex-col bg-gray-800 py-4" onContextMenu={handleContextMenu}>
+  return <div className="w-8 h-full text-white flex flex-col bg-gray-800 pt-4" onContextMenu={handleContextMenu}>
     <div className="flex flex-col gap-3 items-center w-full">
       <ArrowRightIcon className="w-4 h-4" onClick={() => {
         ipcRenderer.send('set-showing', false);

@@ -31,11 +31,10 @@ function createWindow(): void {
     hiddenInMissionControl: true,
     webPreferences: {
       preload: join(__dirname, '../preload/index.mjs'),
-      sandbox: false,
-      offscreen: false,
-      contextIsolation: true,
-      nodeIntegration: false,
+      contextIsolation: false,
+      nodeIntegration: true,
       webviewTag: true,
+      plugins: true,
     }
   })
 
@@ -57,6 +56,9 @@ function createWindow(): void {
   })
   mainWindow.webContents.on('context-menu', () => {
     mainWindow?.focus()
+  })
+  mainWindow.webContents.on('will-attach-webview', (_e, webPreferences) => {
+    webPreferences.preload = join(__dirname, '../preload/webview.mjs')
   })
 
   // HMR for renderer base on electron-vite cli.
@@ -148,6 +150,10 @@ app.whenReady().then(async () => {
     isPin: store.get('window.isPin'),
     isShowing: store.get('window.isShowing')
   }))
+
+  ipcMain.handle('get-preload-path', () => {
+    return `file://${join(__dirname, '../preload/webview.mjs')}`;
+  });
 
   ipcMain.on('set-pin', async (_, value) => {
     await updateWindowState({ isPin: value })

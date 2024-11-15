@@ -1,0 +1,13 @@
+import { contextBridge, ipcRenderer } from 'electron';
+
+contextBridge.exposeInMainWorld('QuickSlide', {
+  sendKey: (key: string) => ipcRenderer.send('webview-keydown', key)
+})
+
+window.addEventListener('keydown', (event) => {
+  if(event.key === 'Escape') {
+    ipcRenderer.send('set-showing', false)
+  } else {
+    ipcRenderer.sendToHost('webview-keydown', event.key)
+  }
+})

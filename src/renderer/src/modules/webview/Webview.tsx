@@ -5,7 +5,6 @@ import { IService } from '@renderer/store/services/types';
 import { DidNavigateEvent, DidNavigateInPageEvent } from 'electron';
 import { uselastServiceUrls } from '@renderer/store/services/hooks';
 
-
 interface WebviewProps {
   service: IService
 }
@@ -29,8 +28,9 @@ export const Webview: FC<WebviewProps> = ({ service }) => {
     serviceActions.updateRuntimeState(service, 'isLoading', false)
     service.webview?.setAudioMuted(service.isMuted)
   }
-  const didAttach = () => {
+  const didAttach = async () => {
     serviceActions.updateRuntimeState(service, 'webview', webViewRef.current)
+    // webViewRef.current?.openDevTools()
   }
   const didFailLoad = () => {
     serviceActions.updateRuntimeState(service, 'isLoading', false)
@@ -71,10 +71,9 @@ export const Webview: FC<WebviewProps> = ({ service }) => {
       webViewRef.current?.removeEventListener('media-paused', mediaPaused)
       webViewRef.current?.removeEventListener('did-navigate-in-page', didNavigateInPage)
       webViewRef.current?.removeEventListener('did-navigate', didNavigateInPage)
-
-
     }
   }, [])
+
   return <webview
     // @ts-ignore
     allowpopups="true"

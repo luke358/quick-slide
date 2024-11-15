@@ -28,11 +28,7 @@ const ServiceComponent = ({ service, shortcut, children, isActive, onActivate, o
 
   useHotkeys(finalShortcut, (e) => {
     e.preventDefault()
-    if (isActive) {
-      setOpen(!open)
-    } else {
-      onActivate?.(service.serviceId)
-    }
+    onActivate?.(service.serviceId)
   }, { scopes: HotKeyScopeMap.Home })
 
   return <Popover modal open={open} onOpenChange={setOpen} {...props}>
@@ -91,7 +87,9 @@ const ServiceComponent = ({ service, shortcut, children, isActive, onActivate, o
           <RefreshCcw size={14} onClick={() => {
             webview?.reload?.()
           }} />
-          <Link2Icon size={14} />
+          <Link2Icon size={14} onClick={() => {
+            window.open(webview?.getURL(), '_blank')
+          }} />
           <NotebookIcon size={14} />
           <MoreVertical size={14} />
         </div>
@@ -123,6 +121,11 @@ export const ServiceColumn: FC = () => {
     setOpenPopover(open ? name : null)
   }, [openPopover])
 
+  const onActivate = (serviceId: string) => {
+    setOpenPopover(null)
+    serviceActions.setActive(serviceId)
+  }
+
   return <div className='flex-1 flex flex-col items-center w-full pt-2 select-none'>
     {
       services?.map((service, index) => <ServiceComponent
@@ -130,7 +133,7 @@ export const ServiceColumn: FC = () => {
         service={service}
         shortcut={`${index + 1}`}
         isActive={id === service.serviceId}
-        onActivate={serviceActions.setActive}
+        onActivate={onActivate}
         open={openPopover === service.serviceId}
         setOpen={(open) => setOpen(service.serviceId, open)}
       >

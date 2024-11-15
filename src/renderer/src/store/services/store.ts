@@ -4,6 +4,7 @@ import { IService, RUNTIME_STATE_KEYS, RuntimeState, ServiceState } from "./type
 import ms from "ms";
 import { persist } from 'zustand/middleware'
 import { debounce, omit } from "lodash-es";
+import { WebviewTag } from "electron";
 
 const initialState = {
   services: [],
@@ -138,6 +139,23 @@ class ServiceActions {
   }
   updateRuntimeState<K extends keyof RuntimeState>(service: IService, key: K, value: RuntimeState[K]) {
     set((state) => ({ services: state.services.map(s => s.serviceId === service.serviceId ? { ...s, [key]: value } : s) }))
+    if (key === 'webview') {
+      setTimeout(() => this._initializeWebviewEvents(service, value as WebviewTag))
+    }
+  }
+
+  _initializeWebviewEvents(service: IService, webview: WebviewTag) {
+
+    webview?.addEventListener('ipc-message', (e) => {
+      switch (e.channel) {
+        case 'webview-keydown':
+          const key = parseInt(e.args[0])
+          if (key > 0 && key <= 9 && key <= get().services.length) {
+            this.setActive(get().services[key - 1].serviceId)
+          }
+          break;
+      }
+    })
   }
 
   updatelastServiceUrls(service: IService, url?: string) {

@@ -1,0 +1,9 @@
+-- CreateTable
+CREATE TABLE "Service" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL,
+    "serviceUrl" TEXT NOT NULL,
+    "recipeId" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+);

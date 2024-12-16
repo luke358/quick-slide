@@ -1,8 +1,12 @@
-import { Chrome, PlusIcon, X } from "lucide-react";
+import { Chrome, PlusIcon } from "lucide-react";
 import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
+import { useAllServices } from "@renderer/store/service/hooks";
 
 export default function AddPanel() {
+  const { isLoading, isError, allServices } = useAllServices()
+  if (isLoading) return <div>Loading...</div>
+  if (isError) return <div>Error</div>
   return (
     <div className="absolute bottom-0 left-0 w-full h-full flex flex-col items-center bg-transparent">
       <div className="flex flex-col h-full w-[80%]">
@@ -14,13 +18,13 @@ export default function AddPanel() {
           {/* 你的 Favourites 列表 */}
 
           <div className="grid grid-cols-[repeat(auto-fill,minmax(80px,1fr))] gap-4">
-            {Array(20).fill(0).map((_, i) => (
-              <div key={i} className="group bg-gray-400 w-[85px] h-[85px] p-[8px] rounded-2xl flex justify-between flex-col overflow-hidden relative">
+            {allServices.map((service) => (
+              <div key={service.id} className="group bg-gray-400 w-[85px] h-[85px] p-[8px] rounded-2xl flex justify-between flex-col overflow-hidden relative">
                 <div><Chrome /></div>
-                <div className="text-black text-xs text-wrap break-words">Google Maps</div>
-                <X className="absolute text-gray-500 top-[8px] right-[8px] opacity-0 group-hover:opacity-100 transition-opacity" size={18} onClick={() => {
+                <div className="text-black text-xs text-wrap break-words">{service.name}</div>
+                {/* <X className="absolute text-gray-500 top-[8px] right-[8px] opacity-0 group-hover:opacity-100 transition-opacity" size={18} onClick={() => {
                   console.log('remove')
-                }} />
+                }} /> */}
               </div>
             ))}
             <div className="bg-gray-500 w-[85px] h-[85px] p-[8px] rounded-2xl flex justify-center items-center overflow-hidden">

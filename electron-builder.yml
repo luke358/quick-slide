@@ -1,5 +1,5 @@
 appId: com.electron.app
-productName: slide-window
+productName: quick-slide
 directories:
   buildResources: build
 files:
@@ -12,7 +12,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: slide-window
+  executableName: quick-slide
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

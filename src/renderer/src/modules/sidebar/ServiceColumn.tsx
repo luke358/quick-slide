@@ -132,8 +132,8 @@ export const ServiceColumn: FC = () => {
     serviceActions.setActive(serviceId)
   }
 
-  return <div className='flex-1 flex flex-col justify-between pt-2 w-full select-none h-full'>
-    <div>
+  return <div className='flex-1 flex flex-col justify-between pt-2 w-full select-none h-full overflow-hidden'>
+    <div className="overflow-auto no-scrollbar">
       {
         services?.map((service, index) => <ServiceComponent
           key={service.serviceId}

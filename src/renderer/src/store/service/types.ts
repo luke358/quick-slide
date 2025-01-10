@@ -1,6 +1,6 @@
 
-import { Service } from "@prisma/client"
+import { Recipes } from "@prisma/client"
 
-export type ServiceState = {
-  allServices: Service[]
+export type RecipeState = {
+  recipes: Recipes[]
 }

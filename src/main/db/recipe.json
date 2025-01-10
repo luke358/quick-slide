@@ -1,0 +1,464 @@
+[
+  {
+    "name": "Todoist",
+    "icon": "https://slidepad.app/icons/todoist.com.png",
+    "recipeId": "todoist.com",
+    "serviceUrl": "https://todoist.com/Users/showLogin",
+    "categories": [
+      "Most Used",
+      "Productivity"
+    ]
+  },
+  {
+    "name": "ChatGPT",
+    "icon": "http://chat.openai.com/favicon.ico",
+    "recipeId": "chat.openai.com",
+    "serviceUrl": "https://chat.openai.com",
+    "categories": [
+      "Most Used",
+      "Productivity"
+    ],
+    "userAgent": "Mobile"
+  },
+  {
+    "name": "Trello",
+    "icon": "https://trello.com/favicon.ico",
+    "recipeId": "trello.com",
+    "serviceUrl": "https://trello.com",
+    "categories": [
+      "Most Used",
+      "Productivity"
+    ]
+  },
+  {
+    "name": "Google Keep",
+    "icon": "https://ssl.gstatic.com/keep/keep.ico",
+    "recipeId": "keep.google.com",
+    "serviceUrl": "https://keep.google.com/",
+    "categories": [
+      "Most Used",
+      "Google",
+      "Productivity"
+    ]
+  },
+  {
+    "name": "Google Calendar",
+    "icon": "https://calendar.google.com/googlecalendar/images/favicon_v2014_24.ico",
+    "recipeId": "calendar.google.com",
+    "serviceUrl": "https://calendar.google.com/",
+    "categories": [
+      "Most Used",
+      "Google",
+      "Productivity"
+    ]
+  },
+  {
+    "name": "Gmail",
+    "icon": "https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico",
+    "recipeId": "gmail.com",
+    "serviceUrl": "https://gmail.com/",
+    "categories": [
+      "Most Used",
+      "Email"
+    ]
+  },
+  {
+    "name": "Youtube",
+    "icon": "https://slidepad.app/icons/youtube.com.png",
+    "recipeId": "youtube.com",
+    "serviceUrl": "https://youtube.com/",
+    "categories": [
+      "Most Used",
+      "Video"
+    ]
+  },
+  {
+    "name": "Spotify",
+    "icon": "https://spotify.com/favicon.ico",
+    "recipeId": "spotify.com",
+    "serviceUrl": "https://open.spotify.com/",
+    "categories": [
+      "Most Used",
+      "Music"
+    ]
+  },
+  {
+    "name": "Apple Notes",
+    "icon": "https://slidepad.app/icons/icloud.com.notes.png",
+    "recipeId": "icloud.com/#notes3",
+    "serviceUrl": "https://www.icloud.com/#notes3",
+    "categories": [
+      "Most Used"
+    ]
+  },
+  {
+    "name": "Evernote",
+    "icon": "https://evernote.com/favicon.ico",
+    "recipeId": "evernote.com",
+    "serviceUrl": "https://www.evernote.com/Login.action",
+    "categories": [
+      "Most Used",
+      "Productivity"
+    ]
+  },
+  {
+    "name": "Notion",
+    "icon": "https://www.notion.so/images/favicon.ico",
+    "recipeId": "notion.so",
+    "serviceUrl": "https://www.notion.so/login",
+    "categories": [
+      "Most Used",
+      "Productivity"
+    ]
+  },
+  {
+    "name": "Slack",
+    "icon": "https://a.slack-edge.com/cebaa/img/icons/favicon-32.png",
+    "recipeId": "slack.com",
+    "serviceUrl": "https://slack.com/signin?",
+    "categories": [
+      "Most Used",
+      "Messaging"
+    ]
+  },
+  {
+    "name": "Microsoft OneNote",
+    "icon": "https://slidepad.app/icons/onenote.com.ico",
+    "recipeId": "onenote.com",
+    "serviceUrl": "https://www.onenote.com/notebooks?auth=1",
+    "categories": [
+      "Microsoft",
+      "Productivity"
+    ]
+  },
+  {
+    "name": "Microsoft OneDrive",
+    "icon": "https://slidepad.app/icons/onedrive.live.com.ico",
+    "recipeId": "onedrive.live.com",
+    "serviceUrl": "https://onedrive.live.com/about/signin/",
+    "categories": [
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Microsoft Team",
+    "icon": "https://slidepad.app/icons/teams.microsoft.com.png",
+    "recipeId": "teams.microsoft.com",
+    "serviceUrl": "https://teams.microsoft.com/",
+    "categories": [
+      "Microsoft",
+      "Messaging"
+    ]
+  },
+  {
+    "name": "Google",
+    "icon": "https://google.com/favicon.ico",
+    "iconWeight": 0,
+    "recipeId": "google.com",
+    "serviceUrl": "https://google.com/",
+    "categories": [
+      "Google"
+    ]
+  },
+  {
+    "name": "GSuite",
+    "icon": "https://gsuite.google.com/static/favicon.ico",
+    "recipeId": "gsuite.google.com",
+    "serviceUrl": "https://gsuite.google.com/",
+    "categories": [
+      "Google"
+    ]
+  },
+  {
+    "name": "Google Drive",
+    "icon": "https://ssl.gstatic.com/docs/doclist/images/infinite_arrow_favicon_5.ico",
+    "recipeId": "drive.google.com",
+    "serviceUrl": "https://drive.google.com/",
+    "categories": [
+      "Google"
+    ]
+  },
+  {
+    "name": "Google Doc",
+    "icon": "https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico",
+    "recipeId": "doc.google.com",
+    "serviceUrl": "https://doc.google.com/",
+    "categories": [
+      "Google"
+    ]
+  },
+  {
+    "name": "Google Spreadsheet",
+    "icon": "https://ssl.gstatic.com/docs/spreadsheets/favicon3.ico",
+    "recipeId": "spreadsheet.google.com",
+    "serviceUrl": "https://spreadsheet.google.com/",
+    "categories": [
+      "Google"
+    ]
+  },
+  {
+    "name": "Google Slides",
+    "icon": "https://ssl.gstatic.com/docs/presentations/images/favicon5.ico",
+    "recipeId": "slides.google.com",
+    "serviceUrl": "https://slides.google.com/",
+    "categories": [
+      "Google"
+    ]
+  },
+  {
+    "name": "DuckDuckGo",
+    "icon": "https://duckduckgo.com/favicon.ico",
+    "iconWeight": 0,
+    "recipeId": "duckduckgo.com",
+    "serviceUrl": "https://duckduckgo.com/",
+    "categories": [
+      "Productivity"
+    ]
+  },
+  {
+    "name": "Mindmeister",
+    "icon": "https://www.mindmeister.com/mm_favicon.ico",
+    "recipeId": "mindmeister.com",
+    "serviceUrl": "https://mindmeister.com/",
+    "categories": [
+      "Productivity"
+    ]
+  },
+  {
+    "name": "Asana",
+    "icon": "https://asana.com/favicon.ico",
+    "recipeId": "asana.com",
+    "serviceUrl": "https://asana.com/",
+    "categories": [
+      "Productivity"
+    ]
+  },
+  {
+    "name": "Bing",
+    "icon": "https://bing.com/favicon.ico",
+    "iconWeight": 0,
+    "recipeId": "bing.com",
+    "serviceUrl": "https://bing.com/",
+    "categories": [
+      "Bing"
+    ]
+  },
+  {
+    "name": "Mail",
+    "icon": "https://slidepad.app/icons/icloud.com.mail.png",
+    "recipeId": "icloud.com/#mail",
+    "serviceUrl": "https://www.icloud.com/#mail",
+    "categories": [
+      "Apple"
+    ]
+  },
+  {
+    "name": "Contacts",
+    "icon": "https://slidepad.app/icons/icloud.com.contacts.png",
+    "recipeId": "icloud.com/#contacts",
+    "serviceUrl": "https://www.icloud.com/#contacts",
+    "categories": [
+      "Apple"
+    ]
+  },
+  {
+    "name": "Calendar",
+    "recipeId": "icloud.com/#calendar",
+    "serviceUrl": "https://www.icloud.com/#calendar",
+    "categories": [
+      "Apple"
+    ]
+  },
+  {
+    "name": "Photos",
+    "icon": "https://slidepad.app/icons/icloud.com.photos.png",
+    "recipeId": "icloud.com/#photos",
+    "serviceUrl": "https://www.icloud.com/#photos",
+    "categories": [
+      "Apple"
+    ]
+  },
+  {
+    "name": "iCloud Drive",
+    "icon": "https://slidepad.app/icons/icloud.com.icloud.drive.png",
+    "recipeId": "icloud.com/#iclouddrive",
+    "serviceUrl": "https://www.icloud.com/#iclouddrive",
+    "categories": [
+      "Apple"
+    ]
+  },
+  {
+    "name": "Notes",
+    "icon": "https://slidepad.app/icons/icloud.com.notes.png",
+    "recipeId": "icloud.com/#notes3",
+    "serviceUrl": "https://www.icloud.com/#notes3",
+    "categories": [
+      "Apple"
+    ]
+  },
+  {
+    "name": "Reminders",
+    "icon": "https://slidepad.app/icons/icloud.com.reminders.png",
+    "recipeId": "icloud.com/#reminders",
+    "serviceUrl": "https://www.icloud.com/#reminders",
+    "categories": [
+      "Apple"
+    ]
+  },
+  {
+    "name": "Pages",
+    "icon": "https://slidepad.app/icons/icloud.com.pages.png",
+    "recipeId": "icloud.com/#pages",
+    "serviceUrl": "https://www.icloud.com/#pages",
+    "categories": [
+      "Apple"
+    ]
+  },
+  {
+    "name": "Numbers",
+    "icon": "https://slidepad.app/icons/icloud.com.numbers.png",
+    "recipeId": "icloud.com/#numbers",
+    "serviceUrl": "https://www.icloud.com/#numbers",
+    "categories": [
+      "Apple"
+    ]
+  },
+  {
+    "name": "Keynote",
+    "icon": "https://slidepad.app/icons/icloud.com.keynote.png",
+    "recipeId": "icloud.com/#keynote",
+    "serviceUrl": "https://www.icloud.com/#keynote",
+    "categories": [
+      "Apple"
+    ]
+  },
+  {
+    "name": "ProtonMail",
+    "icon": "https://protonmail.com/favicon.ico",
+    "recipeId": "protonmail.com",
+    "serviceUrl": "https://mail.protonmail.com/inbox",
+    "categories": [
+      "Email"
+    ]
+  },
+  {
+    "name": "Zoho Mail",
+    "icon": "https://mail.zoho.com/favicon.ico",
+    "recipeId": "mail.zoho.com",
+    "serviceUrl": "https://mail.zoho.com/",
+    "categories": [
+      "Email"
+    ]
+  },
+  {
+    "name": "Microsoft Outlook",
+    "icon": "https://slidepad.app/icons/outlook.live.com.ico",
+    "recipeId": "outlook.live.com",
+    "serviceUrl": "https://outlook.live.com/mail/",
+    "categories": [
+      "Microsoft",
+      "Email"
+    ]
+  },
+  {
+    "name": "Front",
+    "icon": "https://app.frontapp.com/img/favicon/prod/favicon32.png",
+    "recipeId": "frontapp.com",
+    "serviceUrl": "https://app.frontapp.com/signin",
+    "categories": [
+      "Email"
+    ]
+  },
+  {
+    "name": "Messenger",
+    "icon": "https://slidepad.app/icons/messenger.com.ico",
+    "recipeId": "messenger.com",
+    "serviceUrl": "https://messenger.com/",
+    "categories": [
+      "Messaging"
+    ]
+  },
+  {
+    "name": "Telegram",
+    "icon": "https://web.telegram.org/z/icon-192x192.png",
+    "recipeId": "web.telegram.org",
+    "serviceUrl": "https://web.telegram.org/",
+    "categories": [
+      "Messaging"
+    ]
+  },
+  {
+    "name": "Whatsapp",
+    "icon": "https://web.whatsapp.com/favicon-64x64.ico",
+    "recipeId": "whatsapp.com",
+    "serviceUrl": "https://web.whatsapp.com",
+    "categories": [
+      "Messaging"
+    ]
+  },
+  {
+    "name": "Discord",
+    "icon": "https://slidepad.app/icons/discord.com.png",
+    "recipeId": "discordapp.com",
+    "serviceUrl": "https://discordapp.com/login",
+    "categories": [
+      "Messaging"
+    ]
+  },
+  {
+    "name": "Grammarly",
+    "icon": "https://slidepad.app/icons/grammarly.com.png",
+    "recipeId": "grammarly.com",
+    "serviceUrl": "https://www.grammarly.com/signin",
+    "categories": [
+      "Tool"
+    ]
+  },
+  {
+    "name": "Miro",
+    "icon": "https://miro.com/static/favicons/favicon-32x32.png",
+    "recipeId": "miro.com",
+    "serviceUrl": "https://miro.com/login/",
+    "categories": [
+      "Tool"
+    ]
+  },
+  {
+    "name": "Google Translate",
+    "icon": "https://translate.google.ca/favicon.ico",
+    "recipeId": "translate.google.com",
+    "serviceUrl": "https://translate.google.com/",
+    "categories": [
+      "Google",
+      "Tool"
+    ]
+  },
+  {
+    "name": "Twitch",
+    "icon": "https://static.twitchcdn.net/assets/favicon-75270f9df2b07174c23c.ico",
+    "recipeId": "twitch.com",
+    "serviceUrl": "https://twitch.com/",
+    "categories": [
+      "Video",
+      "Social Network"
+    ]
+  },
+  {
+    "name": "Twitter",
+    "icon": "https://twitter.com/favicon.ico",
+    "recipeId": "twitter.com",
+    "serviceUrl": "https://twitter.com/",
+    "categories": [
+      "Social Network"
+    ]
+  },
+  {
+    "name": "Facebook",
+    "icon": "https://facebook.com/favicon.ico",
+    "recipeId": "facebook.com",
+    "serviceUrl": "https://facebook.com/",
+    "categories": [
+      "Social Network"
+    ]
+  }
+]

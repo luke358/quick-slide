@@ -1,23 +1,23 @@
+import { RecipeState } from "./types"
 import { createZustandStore } from "../utils/helper"
-import { ServiceState } from "./types"
 import { produce } from 'immer'
 
 const initialState = {
-  allServices: [],
+  recipes: [],
 }
 
-export const useServiceStore = createZustandStore<ServiceState>("service")(() => initialState)
+export const useRecipestore = createZustandStore<RecipeState>("recipe")(() => initialState)
 
-const set = useServiceStore.setState
-class ServiceActions {
+const set = useRecipestore.setState
+class RecipeActions {
 
-  async fetchAllServices() {
-    const services = await window.electron.ipcRenderer.invoke('db:fetchAllServices')
+  async fetchRecipes() {
+    const recipes = await window.electron.ipcRenderer.invoke('db:fetchRecipes')
     set(state => produce(state, draft => {
-      draft.allServices = services
+      draft.recipes = recipes
     }))
-    return services
+    return recipes
   }
 }
 
-export const serviceActions = new ServiceActions()
+export const recipeActions = new RecipeActions()

@@ -1,10 +1,10 @@
-import { Services } from "@prisma/client";
 import { createZustandStore } from "../utils/helper";
 import { IService, RUNTIME_STATE_KEYS, RuntimeState, ServiceState } from "./types";
 import ms from "ms";
 import { persist } from 'zustand/middleware'
 import { debounce, omit } from "lodash-es";
 import { WebviewTag } from "electron";
+import { Services } from "@prisma/client";
 
 const initialState = {
   services: [],

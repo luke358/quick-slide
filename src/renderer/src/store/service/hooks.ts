@@ -1,17 +1,17 @@
 import { useQuery } from "@tanstack/react-query"
-import { serviceActions, useServiceStore } from "./store"
+import { useRecipestore, recipeActions } from "./store"
 
-export const useAllServices = () => {
+export const useRecipes = () => {
 
   const { isLoading, isError } = useQuery({
-    queryKey: ['allServices'],
-    queryFn: () => serviceActions.fetchAllServices(),
+    queryKey: ['recipes'],
+    queryFn: () => recipeActions.fetchRecipes(),
   })
 
   return {
     isLoading,
     isError,
-    allServices: useServiceStore(state => state.allServices)
+    recipes: useRecipestore(state => state.recipes)
   }
 }
 

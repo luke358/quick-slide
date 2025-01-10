@@ -2,9 +2,18 @@ import { Chrome, PlusIcon } from "lucide-react";
 import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
 import { useRecipes } from "@renderer/store/service/hooks";
+// import { tipcClient } from "@renderer/lib/client";
+import { useEffect } from "react";
+import { tipcClient } from "@renderer/lib/client";
 
 export default function AddPanel() {
   const { isLoading, isError, recipes } = useRecipes()
+  // useEffect(() => {
+  //   tipcClient?.getRecipeIcon('123').then((res) => {
+  //     console.log(res)
+  //   })
+  // }, [])
+
   if (isLoading) return <div>Loading...</div>
   if (isError) return <div>Error</div>
   return (

@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@egoist/tipc':
+        specifier: ^0.3.2
+        version: 0.3.2(electron@33.2.1)(react@18.3.1)
       '@electron-toolkit/preload':
         specifier: ^3.0.1
         version: 3.0.1(electron@33.2.1)
@@ -92,6 +95,9 @@ importers:
       uuid:
         specifier: ^11.0.3
         version: 11.0.3
+      zod:
+        specifier: ^3.24.1
+        version: 3.24.1
       zustand:
         specifier: ^5.0.1
         version: 5.0.1(@types/react@18.3.12)(immer@10.1.1)(react@18.3.1)(use-sync-external-store@1.2.2(react@18.3.1))
@@ -264,6 +270,11 @@ packages:
   '@develar/schema-utils@2.6.5':
     resolution: {integrity: sha512-0cp4PsWQ/9avqTVMCtZ+GirikIA36ikvjtHweU4/j8yLtgObI0+JUPhYFScgwlteveGB1rt3Cm8UhN04XayDig==}
     engines: {node: '>= 8.9.0'}
+
+  '@egoist/tipc@0.3.2':
+    resolution: {integrity: sha512-p8g35BhErVkYIgDqkw/HQJSli1TOsZRIUU9U7PYnYfwru6J/Ep1lwFGH2N6+sQMFi1HkqGTTUlJEISJ1DClfQw==}
+    peerDependencies:
+      electron: '>=26.0.0'
 
   '@electron-toolkit/eslint-config-prettier@2.0.0':
     resolution: {integrity: sha512-L+uG1FvJcAZkPZpSi6B1pmdpyJFyOxWDTjr1Vs47vSryxv/EX1Ch6o4HVsachlDq3fMEkDgojuP2F3ZvVZMoLw==}
@@ -3570,6 +3581,9 @@ packages:
     resolution: {integrity: sha512-9qv4rlDiopXg4E69k+vMHjNN63YFMe9sZMrdlvKnCjlCRWeCBswPPMPUfx+ipsAWq1LXHe70RcbaHdJJpS6hyQ==}
     engines: {node: '>= 10'}
 
+  zod@3.24.1:
+    resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
+
   zustand@5.0.1:
     resolution: {integrity: sha512-pRET7Lao2z+n5R/HduXMio35TncTlSW68WsYBq2Lg1ASspsNGjpwLAsij3RpouyV6+kHMwwwzP0bZPD70/Jx/w==}
     engines: {node: '>=12.20.0'}
@@ -3718,6 +3732,14 @@ snapshots:
     dependencies:
       ajv: 6.12.6
       ajv-keywords: 3.5.2(ajv@6.12.6)
+
+  '@egoist/tipc@0.3.2(electron@33.2.1)(react@18.3.1)':
+    dependencies:
+      electron: 33.2.1
+    optionalDependencies:
+      '@tanstack/react-query': 5.59.20(react@18.3.1)
+    transitivePeerDependencies:
+      - react
 
   '@electron-toolkit/eslint-config-prettier@2.0.0(eslint@8.57.1)(prettier@3.3.3)':
     dependencies:
@@ -7431,6 +7453,8 @@ snapshots:
       archiver-utils: 3.0.4
       compress-commons: 4.1.2
       readable-stream: 3.6.2
+
+  zod@3.24.1: {}
 
   zustand@5.0.1(@types/react@18.3.12)(immer@10.1.1)(react@18.3.1)(use-sync-external-store@1.2.2(react@18.3.1)):
     optionalDependencies:

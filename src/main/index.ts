@@ -4,6 +4,8 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { store } from './store';
 import { registerDatabaseIPC } from './db';
+import { router } from './tipc';
+import { registerIpcMain } from '@egoist/tipc/main';
 
 let mainWindow: BrowserWindow | null = null;
 let WINDOW_WIDTH = (store.get('window.width') || 530) as number;
@@ -40,6 +42,8 @@ function createWindow(): void {
       plugins: true,
     }
   })
+
+  registerIpcMain(router)
 
   mainWindow.on('resized', () => {
     const cursorPoint = screen.getCursorScreenPoint();

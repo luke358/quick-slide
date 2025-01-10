@@ -62,7 +62,7 @@ function createWindow(): void {
   mainWindow.on('ready-to-show', () => {
     mainWindow?.show();
     updateWindowState({ isShowing: true })
-    // mainWindow?.webContents.openDevTools();
+    mainWindow?.webContents.openDevTools();
   })
 
   mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true, skipTransformProcessType: true });

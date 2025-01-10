@@ -7,7 +7,7 @@ import { useActiveServiceId, useServicesData } from "@renderer/store/services/ho
 import { serviceActions } from "@renderer/store/services/store";
 import { IService } from "@renderer/store/services/types";
 import { ArrowLeft, ArrowRight, Globe, Home, Link2Icon, MoreVertical, NotebookIcon, PlusCircle, RefreshCcw, Trash2, Volume1 } from "lucide-react";
-import { FC, PropsWithChildren, useCallback, useEffect, useState } from "react";
+import { FC, memo, PropsWithChildren, useCallback, useEffect, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 interface ServiceComponentProps extends PopoverProps {
   service: IService
@@ -22,7 +22,7 @@ const ServiceIcon = ({ iconUrl, className }: { iconUrl?: string | null, classNam
   return iconUrl ? <img src={iconUrl} className={cn('w-5', className)} /> : <Globe className={cn("w-5", className)} />
 }
 
-const ServiceComponent = ({ service, shortcut, children, isActive, onActivate, open, setOpen, ...props }: PropsWithChildren<ServiceComponentProps>) => {
+const ServiceComponent = memo(({ service, shortcut, children, isActive, onActivate, open, setOpen, ...props }: PropsWithChildren<ServiceComponentProps>) => {
   const finalShortcut = getOS() === "Windows" ? shortcut?.replace("meta", "ctrl").replace("Meta", "Ctrl") : shortcut
 
   const webview = service.webview
@@ -92,6 +92,7 @@ const ServiceComponent = ({ service, shortcut, children, isActive, onActivate, o
             webview?.goForward?.()
           }} className={cn({ 'cursor-not-allowed': !webview?.canGoForward })} />
           <RefreshCcw size={14} onClick={() => {
+            serviceActions.updateRuntimeState(service, 'isLoading', true)
             webview?.reload?.()
           }} />
           <Link2Icon size={14} onClick={() => {
@@ -103,9 +104,9 @@ const ServiceComponent = ({ service, shortcut, children, isActive, onActivate, o
       </div>
     </PopoverContent>
   </Popover >
-}
+})
 
-export const ServiceColumn: FC = () => {
+export const ServiceColumn: FC = memo(() => {
   const [openPopover, setOpenPopover] = useState<string | null>(null)
   const services = useServicesData()
   const id = useActiveServiceId()
@@ -157,5 +158,5 @@ export const ServiceColumn: FC = () => {
     </div>
 
   </div>
-}
+})
 

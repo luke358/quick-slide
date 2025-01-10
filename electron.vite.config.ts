@@ -15,6 +15,9 @@ export default defineConfig({
           webview: resolve(__dirname, 'src/preload/webview.ts')
         }
       }
+    },
+    define: {
+      DEBUG: process.env.DEBUG === "true",
     }
   },
   renderer: {
@@ -24,5 +27,5 @@ export default defineConfig({
       }
     },
     plugins: [react()]
-  }
+  },
 })

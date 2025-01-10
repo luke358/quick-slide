@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, memo, useCallback } from 'react';
 import { Webview } from './Webview';
 import { IService } from '@renderer/store/services/types';
 import { cn } from '@renderer/lib/utils';
@@ -10,16 +10,16 @@ import { WebViewError } from './WebviewError';
 interface ServiceViewProps extends React.HTMLAttributes<HTMLDivElement> {
   service: IService
 }
-export const ServiceView: FC<ServiceViewProps> = ({ service, className, style }) => {
+export const ServiceView: FC<ServiceViewProps> = memo(({ service, className, style }) => {
 
-  const renderWebview = () => {
+  const renderWebview = useCallback(() => {
     if (!service.enabled) return <WebViewEnable service={service} />
     if (service.isHibernateEnabled && service.isHibernating) return <WebViewHibernate service={service} />
     if (service.isError) return <WebViewError />
     return <Webview service={service} />
-  }
+  }, [service])
   return <div className={cn('webview-container w-full h-full relative', className)} style={style}>
     {renderWebview()}
     {service.isLoading && <WebviewLoad />}
   </div>
-}
+})

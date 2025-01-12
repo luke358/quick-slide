@@ -23,19 +23,19 @@ export const Webview: FC<WebviewProps> = memo(({ service }) => {
   }
   const didFinishLoad = () => {
     console.log('didFinishLoad triggered:', service.name); // 添加调试日志
-    if (!service.iconUrl) {
-      webViewRef.current?.executeJavaScript(`
-        let iconLink = document.querySelector('link[rel="icon"]') || document.querySelector('link[rel="shortcut icon"]');
-      iconLink ? iconLink.href : '${webViewRef.current?.src}/favicon.ico';
-    `).then(async iconUrl => {
-        const cachedIcon = await window.electron.ipcRenderer.invoke('download-icon', { serviceName: service.name, iconUrl })
-        if (cachedIcon) {
-          serviceActions.updateService(service, 'iconUrl', cachedIcon)
-        }
-      }).catch(error => {
-        console.error('获取 favicon 出错:', error);
-      });
-    }
+    // if (!service.iconUrl) {
+    //   webViewRef.current?.executeJavaScript(`
+    //     let iconLink = document.querySelector('link[rel="icon"]') || document.querySelector('link[rel="shortcut icon"]');
+    //   iconLink ? iconLink.href : '${webViewRef.current?.src}/favicon.ico';
+    // `).then(async iconUrl => {
+    //     const cachedIcon = await window.electron.ipcRenderer.invoke('download-icon', { serviceName: service.name, iconUrl })
+    //     if (cachedIcon) {
+    //       serviceActions.updateService(service, 'iconUrl', cachedIcon)
+    //     }
+    //   }).catch(error => {
+    //     console.error('获取 favicon 出错:', error);
+    //   });
+    // }
     serviceActions.updateRuntimeState(service, 'isLoading', false)
   }
   const domReady = useCallback(() => {

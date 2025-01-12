@@ -1,4 +1,5 @@
 import { PopoverProps } from "@radix-ui/react-popover";
+import RecipeIcon from "@renderer/components/RecipeIcon";
 import { Popover, PopoverContent, PopoverTrigger } from "@renderer/components/ui/popover";
 import VerticalSwitch from "@renderer/components/ui/vertical-switch";
 import { HotKeyScopeMap } from "@renderer/constants/hotkeys";
@@ -6,7 +7,7 @@ import { cn, getOS } from "@renderer/lib/utils";
 import { useActiveServiceId, useServicesData } from "@renderer/store/services/hooks";
 import { serviceActions } from "@renderer/store/services/store";
 import { IService } from "@renderer/store/services/types";
-import { ArrowLeft, ArrowRight, Globe, Home, Link2Icon, MoreVertical, NotebookIcon, PlusCircle, RefreshCcw, Trash2, Volume1 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Home, Link2Icon, MoreVertical, NotebookIcon, PlusCircle, RefreshCcw, Trash2, Volume1 } from "lucide-react";
 import { FC, memo, PropsWithChildren, useCallback, useEffect, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 interface ServiceComponentProps extends PopoverProps {
@@ -16,10 +17,6 @@ interface ServiceComponentProps extends PopoverProps {
   open: boolean;
   shortcut: string
   setOpen: (open: boolean) => void;
-}
-
-const ServiceIcon = ({ iconUrl, className }: { iconUrl?: string | null, className?: string }) => {
-  return iconUrl ? <img src={iconUrl} className={cn('w-5', className)} /> : <Globe className={cn("w-5", className)} />
 }
 
 const ServiceComponent = memo(({ service, shortcut, children, isActive, onActivate, open, setOpen, ...props }: PropsWithChildren<ServiceComponentProps>) => {
@@ -57,7 +54,7 @@ const ServiceComponent = memo(({ service, shortcut, children, isActive, onActiva
       <div className="flex flex-col gap-4">
         <div className="flex justify-between w-full">
           <div className="flex gap-1">
-            <ServiceIcon iconUrl={service.iconUrl} className="h-8 w-auto" />
+            <RecipeIcon name={service.recipe.name} icon={service.recipe.icon} className="h-8 w-auto" />
             <div>
               <div className="text-sm">{service.name}</div>
               <div className="text-xs">{/* X. It's what's happening TODO: show title */}</div>
@@ -145,7 +142,7 @@ export const ServiceColumn: FC = memo(() => {
           open={openPopover === service.serviceId}
           setOpen={(open) => setOpen(service.serviceId, open)}
         >
-          <ServiceIcon iconUrl={service.iconUrl} />
+          <RecipeIcon name={service.recipe.name} icon={service.recipe.icon} className="w-5 h-5" />
         </ServiceComponent>)
       }
     </div>

@@ -6,7 +6,8 @@
     "src/renderer/src/**/*.tsx",
     "src/preload/*.d.ts",
     "src/main/export.ts",
-    "src/main/tipc/*.ts"
+    "src/main/tipc/*.ts",
+    "src/main/db/*.ts"
   ],
   "compilerOptions": {
     "composite": true,

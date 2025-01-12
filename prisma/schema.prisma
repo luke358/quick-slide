@@ -15,22 +15,23 @@ model Recipes {
   name       String
   serviceUrl String
   recipeId   String
-  icon       String?
+  icon       String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   isPreset   Boolean  @default(false)
   // Favourites Favourites[]
+
+  Services Services[]
 }
 
 model Services {
   id                 Int      @id @default(autoincrement())
   serviceId          String   @unique
   name               String
-  recipeId           String
+  recipe             Recipes  @relation(fields: [recipeId], references: [id])
+  recipeId           Int
   settings           String
   serviceUrl         String
-  iconUrl            String?
-  defaultIconUrl     String?
   isHibernateEnabled Boolean  @default(false)
   isMuted            Boolean  @default(false)
   enabled            Boolean  @default(true)

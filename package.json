@@ -28,7 +28,7 @@
     "@egoist/tipc": "^0.3.2",
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
-    "@prisma/client": "5.22.0",
+    "@prisma/client": "6.2.1",
     "@radix-ui/react-context-menu": "^2.2.2",
     "@radix-ui/react-popover": "^1.1.2",
     "@radix-ui/react-scroll-area": "^1.2.0",

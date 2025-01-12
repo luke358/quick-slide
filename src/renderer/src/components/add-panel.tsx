@@ -1,10 +1,13 @@
-import { Chrome, PlusIcon } from "lucide-react";
+import { Chrome, PlusIcon, X } from "lucide-react";
 import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
 import { useRecipes } from "@renderer/store/service/hooks";
 // import { tipcClient } from "@renderer/lib/client";
 import { useEffect } from "react";
 import { tipcClient } from "@renderer/lib/client";
+import RecipeIcon from "./RecipeIcon";
+import { Queries } from "@renderer/queries";
+import { queryClient } from "@renderer/lib/query-client";
 
 export default function AddPanel() {
   const { isLoading, isError, recipes } = useRecipes()
@@ -29,11 +32,14 @@ export default function AddPanel() {
           <div className="grid grid-cols-[repeat(auto-fill,minmax(80px,1fr))] gap-4">
             {recipes.map((recipe) => (
               <div key={recipe.id} className="group bg-gray-400 w-[85px] h-[85px] p-[8px] rounded-2xl flex justify-between flex-col overflow-hidden relative">
-                <div className="w-[40px] h-[40px]"> {recipe.icon && <img src={recipe.icon} alt={recipe.name} className="w-full h-full object-cover" />}</div>
+                <RecipeIcon icon={recipe.icon!} name={recipe.name} onClick={async () => {
+                  await tipcClient?.addService(recipe)
+                  await queryClient.invalidateQueries({ queryKey: ['services'] })
+                }} />
                 <div className="text-black text-xs text-wrap break-words">{recipe.name}</div>
-                {/* <X className="absolute text-gray-500 top-[8px] right-[8px] opacity-0 group-hover:opacity-100 transition-opacity" size={18} onClick={() => {
+                {!recipe.isPreset && <X className="absolute text-gray-500 top-[8px] right-[8px] opacity-0 group-hover:opacity-100 transition-opacity" size={18} onClick={() => {
                   console.log('remove')
-                }} /> */}
+                }} />}
               </div>
             ))}
             <div className="bg-gray-500 w-[85px] h-[85px] p-[8px] rounded-2xl flex justify-center items-center overflow-hidden">

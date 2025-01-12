@@ -1,6 +1,6 @@
 
 import { app, BrowserWindow, ipcMain } from "electron"
-import { prisma } from "./instance"
+import { prisma } from "./_instance"
 import { Prisma } from "@prisma/client"
 import path from "path"
 import { mkdirSync, readFileSync } from "fs"
@@ -198,19 +198,19 @@ export async function initTestData() {
 
 
   // 创建recipe
-  const preloadRecipes = recipes.map((recipe) => {
-    return {
-      name: recipe.name,
-      icon: recipe.icon,
-      recipeId: recipe.recipeId,
-      serviceUrl: recipe.serviceUrl,
-    }
-  })
-  const count = await prisma.recipes.findMany()
-  if (count.length > 0) return
-  await prisma.recipes.createMany({
-    data: preloadRecipes
-  })
+  // const preloadRecipes = recipes.map((recipe) => {
+  //   return {
+  //     name: recipe.name,
+  //     icon: recipe.icon,
+  //     recipeId: recipe.recipeId,
+  //     serviceUrl: recipe.serviceUrl,
+  //   }
+  // })
+  // const count = await prisma.recipes.findMany()
+  // if (count.length > 0) return
+  // await prisma.recipes.createMany({
+  //   data: preloadRecipes
+  // })
 }
 
 export async function registerDatabaseIPC() {
@@ -227,10 +227,15 @@ export async function registerDatabaseIPC() {
   })
 
   ipcMain.handle('db:getServices', async () => {
-    const services = await prisma.services.findMany()
+    const services = await prisma.services.findMany({
+      include: {
+        recipe: true
+      }
+    })
     return services
   })
   ipcMain.handle('db:updateService', async (_, service) => {
+    console.log(service, 'db:updateService')
     return await prisma.services.update({
       where: { serviceId: service.serviceId },
       data: service

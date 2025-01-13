@@ -28,7 +28,7 @@ asarUnpack:
   - "prisma/**/*"
   - ".prisma/**/*"
 win:
-  executableName: quick-slide
+  executableName: QuickSlide
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

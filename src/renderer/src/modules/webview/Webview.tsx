@@ -13,8 +13,9 @@ interface WebviewProps {
 export const Webview: FC<WebviewProps> = memo(({ service }) => {
   const webViewRef = useRef<ElectronWebView | null>(null)
   const lastServiceUrls = uselastServiceUrls()
-
+  const isAttached = useRef(false)
   const didStartLoading = () => {
+    if (isAttached.current) return
     console.log('didStartLoading triggered:', service.name); // 添加调试日志
     serviceActions.updateRuntimeState(service, 'isLoading', true)
   }
@@ -22,6 +23,7 @@ export const Webview: FC<WebviewProps> = memo(({ service }) => {
     serviceActions.updateRuntimeState(service, 'isLoading', false)
   }
   const didFinishLoad = () => {
+    if (isAttached.current) return
     console.log('didFinishLoad triggered:', service.name); // 添加调试日志
     // if (!service.iconUrl) {
     //   webViewRef.current?.executeJavaScript(`
@@ -49,13 +51,14 @@ export const Webview: FC<WebviewProps> = memo(({ service }) => {
 
     // 只在首次加载时检查 lastServiceUrl
     const serviceUrl = normalizeUrl(service.serviceUrl);
-    if (lastServiceUrls[service.serviceId]) {
+    if (lastServiceUrls[service.serviceId] && !isAttached.current) {
       const lastServiceUrl = normalizeUrl(lastServiceUrls[service.serviceId] || service.serviceUrl);
       console.log(lastServiceUrl, serviceUrl, 'lastServiceUrl !== serviceUrl')
       if (lastServiceUrl !== serviceUrl) {
         webViewRef.current?.loadURL(lastServiceUrl)
       }
     }
+    isAttached.current = true
   }
   const didFailLoad = (event: DidFailLoadEvent) => {
     console.log('didFailLoad triggered:', event); // 添加调试日志
@@ -145,8 +148,8 @@ export const Webview: FC<WebviewProps> = memo(({ service }) => {
     ref={(_webviewRef: ElectronWebView) => {
       webViewRef.current = _webviewRef
     }}
-    useragent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36'
-    className='w-full h-full'
-    src={service.serviceUrl}
+    useragent={service.recipe.name === 'ChatGPT' ? '' : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36"}
+    className = 'w-full h-full'
+    src = { service.serviceUrl }
   />
 })

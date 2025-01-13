@@ -1,5 +1,5 @@
 appId: com.luke358.app
-productName: quick-slide
+productName: QuickSlide
 directories:
   buildResources: build
 files:

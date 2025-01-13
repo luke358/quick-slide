@@ -6,7 +6,11 @@ import { store } from './store';
 import { registerDatabaseIPC } from './db';
 import { router } from './tipc';
 import { registerIpcMain } from '@egoist/tipc/main';
+import isDev from 'electron-is-dev';
 
+if (isDev) {
+  app.setPath('userData', join(app.getPath('appData'), `${app.name}Dev`));
+}
 let mainWindow: BrowserWindow | null = null;
 let WINDOW_WIDTH = (store.get('window.width') || 530) as number;
 let WINDOW_HEIGHT = (store.get('window.height') || 800) as number;

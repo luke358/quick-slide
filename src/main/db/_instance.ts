@@ -2,10 +2,10 @@ import { join } from "path"
 import { app } from "electron"
 import isDev from 'electron-is-dev'
 import { copyFileSync, existsSync, mkdirSync } from "fs"
-import { PrismaClient } from "@prisma/client"
-
+import pkg from '@prisma/client';
+const { PrismaClient } = pkg;
 declare global {
-  var prisma: PrismaClient | undefined
+  var prisma: InstanceType<typeof PrismaClient> | undefined
 }
 
 // 获取正确的数据库路径

@@ -1,4 +1,4 @@
-appId: com.electron.app
+appId: com.luke358.app
 productName: quick-slide
 directories:
   buildResources: build

@@ -1,5 +1,5 @@
 import { app, shell, BrowserWindow, ipcMain, screen, MenuItemConstructorOptions, Menu } from 'electron'
-import { join } from 'path'
+import path, { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { store } from './store';
@@ -7,10 +7,26 @@ import { registerDatabaseIPC } from './db';
 import { router } from './tipc';
 import { registerIpcMain } from '@egoist/tipc/main';
 import isDev from 'electron-is-dev';
+import fse from 'fs-extra';
 
 if (isDev) {
   app.setPath('userData', join(app.getPath('appData'), `${app.name}Dev`));
 }
+
+async function initializeIcons() {
+  console.log('initializeIcons', app.getPath('userData'), app.getAppPath())
+  const userIconDir = path.join(app.getPath('userData'), 'icons');
+  const defaultIconsPath = isDev
+    ? path.join(__dirname, '../../resources/icons')
+    : path.join(process.resourcesPath, 'icons');
+
+  if (!fse.existsSync(userIconDir) && fse.existsSync(defaultIconsPath)) {
+    fse.ensureDirSync(userIconDir);
+    fse.copySync(defaultIconsPath, userIconDir);
+  }
+}
+initializeIcons()
+
 let mainWindow: BrowserWindow | null = null;
 let WINDOW_WIDTH = (store.get('window.width') || 530) as number;
 let WINDOW_HEIGHT = (store.get('window.height') || 800) as number;
@@ -40,7 +56,7 @@ function createWindow(): void {
     resizable: true,
     webPreferences: {
       preload: join(__dirname, '../preload/index.mjs'),
-      contextIsolation: false,
+      contextIsolation: true,
       nodeIntegration: true,
       webviewTag: true,
       plugins: true,

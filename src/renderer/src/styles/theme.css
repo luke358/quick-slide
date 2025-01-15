@@ -1,0 +1,30 @@
+:root {
+  --background: 230 8.33% 14.12%;
+  --foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --border: 0 0% 39.61%;
+  --input: 0 0% 39.61%;
+  --primary: 60 9.1% 97.8%;
+  --primary-foreground: 24 9.8% 10%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --ring: 240 4.9% 83.9%;
+  --radius: 0.5rem;
+}
+
+.kbd {
+  background-color: oklch(0.232607 0.013807 253.101);
+  /* @apply shadow-[0px_2px_0px_0px_rgba(255,255,255,0.5)] dark:shadow-[0px_2px_0px_0px_rgba(0,0,0,0.6)]; */
+  @apply rounded-[4px] px-1;
+  @apply border border-border;
+  @apply inline-flex items-center justify-center;
+}

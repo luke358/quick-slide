@@ -30,7 +30,7 @@ export const Sidebar: FC = () => {
             submenu: [
               {
                 type: "text",
-                label: 'Pin SlideWindow',
+                label: 'Pin QuickSlide',
                 checked: windowState.isPin,
                 shortcut: "Meta+P",
                 click: () => {
@@ -60,7 +60,7 @@ export const Sidebar: FC = () => {
               },
               {
                 type: 'text',
-                label: 'Reset SlideWindow',
+                label: 'Reset QuickSlide',
               },
             ],
           },
@@ -69,14 +69,14 @@ export const Sidebar: FC = () => {
           },
           {
             type: "text",
-            label: 'Relaunch SlideWindow',
+            label: 'Relaunch QuickSlide',
             click: () => {
               ipcRenderer.send('relaunch')
             },
           },
           {
             type: "text",
-            label: 'Quit SlideWindow',
+            label: 'Quit QuickSlide',
             click: () => {
               ipcRenderer.send('quit')
             },

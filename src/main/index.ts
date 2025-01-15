@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain, screen, MenuItemConstructorOptions, Menu } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, screen, MenuItemConstructorOptions, Menu, Tray, nativeImage } from 'electron'
 import path, { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -86,7 +86,7 @@ function createWindow(): void {
   mainWindow.on('ready-to-show', () => {
     mainWindow?.show();
     updateWindowState({ isShowing: true })
-    mainWindow?.webContents.openDevTools();
+    // isDev && mainWindow?.webContents.openDevTools();
   })
 
   mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true, skipTransformProcessType: true });
@@ -194,7 +194,7 @@ function handleHideWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
-
+  createTray()
   await registerDatabaseIPC()
   app.dock.hide(); // 隐藏 Dock 图标
 
@@ -307,6 +307,61 @@ function normalizeMenuItems(
         })
       },
       submenu: item.submenu ? normalizeMenuItems(item.submenu, context, curPath) : undefined,
+    }
+  })
+}
+
+let tray: Tray | null = null
+
+function createTray() {
+  console.log('createTray')
+  // 创建托盘图标
+  const defaultIconsPath = isDev
+    ? path.join(__dirname, '../../resources/tray-icon.png')
+    : path.join(process.resourcesPath, 'tray-icon.png');
+  const icon = nativeImage.createFromPath(
+    defaultIconsPath
+  ).resize({ width: 16, height: 16 })
+
+  tray = new Tray(icon)
+
+  // 设置托盘图标的悬停提示
+  tray.setToolTip('Your App Name')
+
+  // 创建托盘菜单
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: '显示',
+      click: () => {
+        mainWindow?.show();
+        updateWindowState({ isShowing: true })
+        mainWindow?.webContents.send('window-showing')
+      }
+    },
+    {
+      label: '隐藏',
+      click: () => {
+        handleHideWindow()
+      }
+    },
+    { type: 'separator' },
+    {
+      label: '退出',
+      click: () => {
+        app.quit()
+      }
+    }
+  ])
+
+  // 设置托盘的上下文菜单
+  tray.setContextMenu(contextMenu)
+
+  // 可选：点击托盘图标时显示窗口
+  tray.on('click', () => {
+    if (!mainWindow?.isVisible()) {
+      mainWindow?.show()
+      updateWindowState({ isShowing: true })
+      mainWindow?.webContents.send('window-showing')
     }
   })
 }

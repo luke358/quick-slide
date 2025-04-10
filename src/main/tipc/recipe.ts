@@ -5,7 +5,7 @@ import { app } from 'electron';
 import path from 'path';
 import { readFile } from 'fs/promises';
 
-export const recipeRouter = {
+export const recipeRoute = {
   getRecipeIcon: t.procedure.input<{ icon: string, recipeName: string }>().action(async ({ input }) => {
     const { icon, recipeName } = input
     try {

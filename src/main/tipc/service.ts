@@ -3,7 +3,7 @@ import { t } from './_instance';
 import { prisma } from '../db/_instance';
 import { v4 as uuidv4 } from 'uuid'
 
-export const serviceRouter = {
+export const serviceRoute = {
   addService: t.procedure.input<Recipes>().action(async ({ input }) => {
     const { name, serviceUrl } = input
     const service: Prisma.ServicesCreateInput = {

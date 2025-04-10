@@ -1,4 +1,5 @@
 import type { MenuItemConstructorOptions } from "electron"
+import { tipcClient } from "./client"
 
 // import { tipcClient } from "./client"
 
@@ -21,7 +22,7 @@ export const showElectronContextMenu = async (items: Array<ElectronMenuItem>) =>
     },
   )
   const itemsWithoutClick = removeClick(items)
-  await window.electron.ipcRenderer.invoke('show-context-menu', { items: itemsWithoutClick })
+  await tipcClient?.showContextMenu({ items: itemsWithoutClick })
   dispose()
 }
 

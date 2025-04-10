@@ -5,6 +5,7 @@ import { ServiceColumn } from './ServiceColumn';
 import { shortcuts } from '@renderer/constants/shortcuts';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { HotKeyScopeMap } from '@renderer/constants/hotkeys';
+import { tipcClient } from '@renderer/lib/client';
 
 export const Sidebar: FC = () => {
   const { ipcRenderer } = window.electron;
@@ -71,14 +72,14 @@ export const Sidebar: FC = () => {
             type: "text",
             label: 'Relaunch QuickSlide',
             click: () => {
-              ipcRenderer.send('relaunch')
+              tipcClient?.relaunch()
             },
           },
           {
             type: "text",
             label: 'Quit QuickSlide',
             click: () => {
-              ipcRenderer.send('quit')
+              tipcClient?.quit()
             },
           },
         ],

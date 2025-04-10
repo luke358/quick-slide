@@ -1,9 +1,15 @@
-import { recipeRouter } from './recipe';
-import { serviceRouter } from './service';
+import { recipeRoute } from './recipe';
+import { serviceRoute } from './service';
+import { menuRoute } from './menu';
+import { appRoute } from './app';
+import { settingsRoute } from './settings'
 // import { t } from './_instance';
 
 export const router = {
-  ...recipeRouter,
-  ...serviceRouter
+  ...recipeRoute,
+  ...serviceRoute,
+  ...menuRoute,
+  ...appRoute,
+  ...settingsRoute,
 }
 export type Router = typeof router;

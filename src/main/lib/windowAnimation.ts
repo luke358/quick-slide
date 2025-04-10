@@ -1,6 +1,7 @@
 import { screen } from 'electron';
 import { Animator, Easing } from './animation';
 import { BOUNDARY_GAP, TRIGGER_SHOW_OFFSET } from '../constants';
+import { store } from '../store';
 
 const windowAnimator = new Animator();
 
@@ -47,14 +48,36 @@ export const showFromRight = () => {
   if (isShow) return
   if (isAnimating) return
   isAnimating = true
-  const size = screen.getDisplayNearestPoint(screen.getCursorScreenPoint())
+
+  const cursorPoint = screen.getCursorScreenPoint();
+  const currentDisplay = screen.getDisplayNearestPoint(cursorPoint);
+  const windowState = store.get('windowState') || {}
+  let { width, height } = windowState
+  const maxWidth = Math.min(width, currentDisplay.workArea.width * 0.9);
+  const maxHeight = Math.min(height, currentDisplay.workArea.height * 0.9);
+
+
+  if (width > maxWidth || height > maxHeight) {
+    width = Math.min(width, maxWidth);
+    height = Math.min(height, maxHeight);
+    store.set('windowState', {
+      ...windowState,
+      width,
+      height,
+    });
+    mainWindow?.setSize(maxWidth, maxHeight)
+  }
+
+  mainWindow?.setPosition(
+    currentDisplay.workArea.x + currentDisplay.workArea.width - width,
+    Math.round((currentDisplay.workArea.height - height) / 2) + currentDisplay.workArea.y
+  );
   const bounds = mainWindow.getBounds();
-  const displayBounds = size.bounds;
 
   // 起始位置（屏幕右侧外）
-  const startX = displayBounds.width;
+  const startX = currentDisplay.workArea.x + currentDisplay.workArea.width;
   // 目标位置
-  const endX = displayBounds.width - bounds.width - BOUNDARY_GAP;
+  const endX = currentDisplay.workArea.x + currentDisplay.workArea.width - bounds.width - BOUNDARY_GAP;
 
   // 先将窗口移到起始位置并显示
   mainWindow.setBounds({
@@ -62,6 +85,9 @@ export const showFromRight = () => {
     x: startX,
   });
   mainWindow.show();
+  setTimeout(() => {
+    mainWindow.focus()
+  }, 0)
 
   if (!isPin) {
     showOverlayWindow()
@@ -71,7 +97,7 @@ export const showFromRight = () => {
   windowAnimator.animate(
     startX,
     endX,
-    300, // 动画持续时间（毫秒）
+    350, // 动画持续时间（毫秒）
     (x) => {
       mainWindow?.setBounds({
         ...bounds,
@@ -109,7 +135,7 @@ export const hideToRight = () => {
   windowAnimator.animate(
     startX,
     endX,
-    300, // 动画持续时间（毫秒）
+    350, // 动画持续时间（毫秒）
     (x) => {
       mainWindow?.setBounds({
         ...bounds,

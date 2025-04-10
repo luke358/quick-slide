@@ -4,6 +4,7 @@ import { join } from "path";
 import { is } from "@electron-toolkit/utils";
 import { store } from "./store";
 import { BOUNDARY_GAP } from "./constants";
+import { hideToRight } from "./lib/windowAnimation";
 
 const windows = {
   mainWindow: null as BrowserWindow | null,
@@ -22,45 +23,49 @@ export function createWindow(options: BrowserWindowConstructorOptions) {
 }
 
 export function createMainWindow() {
-  const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize
+  const cursorPoint = screen.getCursorScreenPoint();
+  const currentDisplay = screen.getDisplayNearestPoint(cursorPoint);
   const windowState = store.get('windowState') || {}
   const { width = 530, height = 800 } = windowState
-  const x = screenWidth - width - BOUNDARY_GAP;
-  const y = Math.round((screenHeight - height) / 2)
 
-  const overlayWindow = createWindow({
-    width: 0,
-    height: 0,
-    x: 0,
-    y: 0,
-    frame: false,
-    hasShadow: false,
-    transparent: true,
-    show: false,
-    alwaysOnTop: true,
-    type: 'toolbar',
-    skipTaskbar: true,
-    fullscreenable: false,
-    focusable: true,
-    titleBarStyle: 'hidden',
-    roundedCorners: false,  // macOS
-    ...(process.platform === 'linux' ? { icon } : {}),
-    hiddenInMissionControl: true,
-    resizable: true,
-    webPreferences: {
-      preload: join(__dirname, '../preload/index.mjs'),
-      nodeIntegration: true,
-    }
-  })
-  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    overlayWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/#/overlay`)
-  } else {
-    overlayWindow.loadFile(join(__dirname, '../renderer/index.html'), {
-      hash: 'overlay'
-    })
-  }
+  // 使用当前显示器的工作区域计算初始位置
+  const x = currentDisplay.workArea.x + currentDisplay.workArea.width - width - BOUNDARY_GAP;
+  const y = currentDisplay.workArea.y + Math.round((currentDisplay.workArea.height - height) / 2);
 
-  windows.overlayWindow = overlayWindow
+  // const overlayWindow = createWindow({
+  //   width: 0,
+  //   height: 0,
+  //   x: 0,
+  //   y: 0,
+  //   frame: false,
+  //   hasShadow: false,
+  //   transparent: true,
+  //   show: false,
+  //   alwaysOnTop: true,
+  //   type: 'toolbar',
+  //   skipTaskbar: true,
+  //   fullscreenable: false,
+  //   focusable: true,
+  //   titleBarStyle: 'hidden',
+  //   roundedCorners: false,  // macOS
+  //   ...(process.platform === 'linux' ? { icon } : {}),
+  //   hiddenInMissionControl: true,
+  //   resizable: true,
+  //   webPreferences: {
+  //     preload: join(__dirname, '../preload/index.mjs'),
+  //     nodeIntegration: true,
+  //   }
+  // })
+  // if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+  //   overlayWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/#/overlay`)
+  // } else {
+  //   overlayWindow.loadFile(join(__dirname, '../renderer/index.html'), {
+  //     hash: 'overlay'
+  //   })
+  // }
+  // overlayWindow.setIgnoreMouseEvents(true, { forward: true });
+
+  // windows.overlayWindow = overlayWindow
 
   const mainWindow = createWindow({
     width,
@@ -89,26 +94,34 @@ export function createMainWindow() {
       plugins: true,
     }
   })
+
+  mainWindow.on('blur', () => {
+    hideToRight()
+  })
+
   mainWindow.on('resize', () => {
     if (!mainWindow) return;
     const [width, height] = mainWindow.getSize();
-
+    console.log('resize', width, height)
     store.set('windowState', {
       ...windowState,
       width,
       height,
     });
   });
-
-  windows.mainWindow = mainWindow
-  mainWindow.webContents.openDevTools()
-
   mainWindow.on('resized', () => {
     const cursorPoint = screen.getCursorScreenPoint();
     const currentDisplay = screen.getDisplayNearestPoint(cursorPoint);
-    const y = Math.round((currentDisplay.workArea.height - height) / 2) + currentDisplay.workArea.y
-    mainWindow?.setBounds({ y }, true)
-  })
+    const [width, height] = mainWindow.getSize();
+
+    // 使用当前显示器的实际坐标
+    const x = currentDisplay.workArea.x + currentDisplay.workArea.width - width - BOUNDARY_GAP;
+    const y = currentDisplay.workArea.y + Math.round((currentDisplay.workArea.height - height) / 2);
+
+    mainWindow.setBounds({ x, y }, true)
+  });
+
+  windows.mainWindow = mainWindow
 
   mainWindow.on('ready-to-show', () => {
     mainWindow?.show();

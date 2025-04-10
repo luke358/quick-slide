@@ -1,4 +1,4 @@
-import { Menu, MenuItemConstructorOptions } from 'electron';
+import { BrowserWindow, Menu, MenuItemConstructorOptions } from 'electron';
 import { t } from './_instance';
 
 
@@ -34,6 +34,9 @@ export const menuRoute = {
       items: SerializableMenuItem[]
     }>()
     .action(({ input, context }) => {
+      const win = BrowserWindow.fromWebContents(context.sender)
+      win?.focus()
+
       const defer = Promise.withResolvers<void>()
       const normalizedMenuItems = normalizeMenuItems(input.items, context)
 

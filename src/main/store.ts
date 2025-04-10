@@ -1,13 +1,19 @@
+import { StoreData } from '../shared/types';
 import Store from "electron-store"
 
-type StoreData = {
-  windowState: {
-    isPin: boolean,
-    isVisible: boolean,
-    width: number,
-    height: number,
-    float: 'left' | 'right'
+export const store = new Store<StoreData>({
+  name: "db", defaults: {
+    windowState: {
+      width: 530,
+      height: 800,
+      float: 'right'
+    },
+    preferences: {
+      isPin: false
+    }
   }
-}
+})
 
-export const store = new Store<StoreData>({ name: "db" })
+export const windowRuntime = {
+  isShow: true
+}

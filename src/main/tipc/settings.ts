@@ -1,13 +1,19 @@
+import { StoreData } from '../../shared/types';
+import { store, windowRuntime } from '../store';
 import { t } from './_instance';
 
-let pin = false
-let showing = false
 export const settingsRoute = {
-  togglePin: t.procedure.action(async () => {
-    pin = !pin
+  getPreferences: t.procedure.action(async () => {
+    return store.get('preferences')
   }),
-  toggleShowing: t.procedure.action(async () => {
-    showing = !showing
-  })
+  setPreferences: t.procedure.input<StoreData['preferences']>().action(async ({ input }) => {
+    store.set('preferences', input)
+  }),
+  getWindowRuntime: t.procedure.action(async () => {
+    return windowRuntime
+  }),
+  setWindowRuntime: t.procedure.input<typeof windowRuntime>().action(async ({ input }) => {
+    Object.assign(windowRuntime, input)
+  }),
 }
 

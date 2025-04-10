@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback } from 'react';
 import { PinIcon, ArrowRightIcon, MoreHorizontalIcon, PinOff } from 'lucide-react';
 import { useShowContextMenu } from '@renderer/atoms/context-menu';
 import { ServiceColumn } from './ServiceColumn';
@@ -6,14 +6,34 @@ import { shortcuts } from '@renderer/constants/shortcuts';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { HotKeyScopeMap } from '@renderer/constants/hotkeys';
 import { tipcClient } from '@renderer/lib/client';
+import { usePreferencesValue, useSetPreferences } from '@renderer/hooks/biz/usePreference';
+import { useSetWindowRuntime, useWindowRuntimeValue } from '@renderer/hooks/biz/useWindowRuntime';
 
 export const Sidebar: FC = () => {
-  const { ipcRenderer } = window.electron;
+  const windowRuntime = useWindowRuntimeValue()
+  const setWindowRuntime = useSetWindowRuntime()
 
-  const [windowState, setWindowState] = useState({ isPin: false, isShowing: true })
+  const preferences = usePreferencesValue()
+  const serPreferences = useSetPreferences()
+
+  const hideWindow = () => {
+    tipcClient?.hideToRight()
+    setWindowRuntime({
+      ...windowRuntime,
+      isShow: false
+    })
+  }
+
+  const togglePin = () => {
+    serPreferences({
+      ...preferences,
+      isPin: !preferences.isPin
+    })
+  }
+
 
   useHotkeys(shortcuts.home.pinWindow.key, () => {
-    ipcRenderer.send('set-pin', !windowState.isPin);
+    togglePin()
   }, {
     scopes: HotKeyScopeMap.Home,
   })
@@ -32,10 +52,10 @@ export const Sidebar: FC = () => {
               {
                 type: "text",
                 label: 'Pin QuickSlide',
-                checked: windowState.isPin,
+                checked: preferences.isPin,
                 shortcut: "Meta+P",
                 click: () => {
-                  ipcRenderer.send('set-pin', !windowState.isPin);
+                  togglePin()
                 }
               },
               // {
@@ -86,32 +106,19 @@ export const Sidebar: FC = () => {
         e,
       )
     },
-    [showContextMenu, windowState],
+    [showContextMenu, preferences],
   )
-  useEffect(() => {
-    // 初始化状态
-    async function initState() {
-      const state = await window.api.getWindowState()
-      setWindowState(state)
-    }
-    initState()
 
-    // 监听状态变化
-    window.api.onWindowStateChange((newState) => {
-      setWindowState(newState)
-    })
-
-  }, [])
 
   return <div className="w-8 h-full text-white flex flex-col bg-gray-800 pt-4" onContextMenu={handleContextMenu}>
     <div className="flex flex-col gap-3 items-center w-full">
       <ArrowRightIcon className="w-4 h-4" onClick={() => {
-        ipcRenderer.send('set-showing', false);
+        hideWindow()
       }} />
-      {windowState.isPin ? <PinOff className="w-4 h-4" onClick={() => {
-        ipcRenderer.send('set-pin', false);
+      {preferences.isPin ? <PinOff className="w-4 h-4" onClick={() => {
+        togglePin()
       }} /> : <PinIcon className="w-4 h-4" onClick={() => {
-        ipcRenderer.send('set-pin', true);
+        togglePin()
       }} />}
       <div onClick={handleContextMenu}>
         <MoreHorizontalIcon className="w-4 h-4" />

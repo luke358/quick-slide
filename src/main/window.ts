@@ -96,6 +96,8 @@ export function createMainWindow() {
   })
 
   mainWindow.on('blur', () => {
+    const preferences = store.get('preferences') || {}
+    if (preferences.isPin) return
     hideToRight()
   })
 

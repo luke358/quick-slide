@@ -8,7 +8,7 @@ import { useActiveServiceId, useServicesData } from "@renderer/store/services/ho
 import { serviceActions } from "@renderer/store/services/store";
 import { IService } from "@renderer/store/services/types";
 import { ArrowLeft, ArrowRight, Home, Link2Icon, MoreVertical, NotebookIcon, PlusCircle, RefreshCcw, Trash2, Volume1 } from "lucide-react";
-import { FC, memo, PropsWithChildren, useCallback, useEffect, useState } from "react";
+import { FC, memo, PropsWithChildren, useCallback, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 interface ServiceComponentProps extends PopoverProps {
   service: IService
@@ -107,19 +107,6 @@ export const ServiceColumn: FC = memo(() => {
   const [openPopover, setOpenPopover] = useState<string | null>(null)
   const services = useServicesData()
   const id = useActiveServiceId()
-
-  useEffect(() => {
-    const handleHiding = () => {
-      setOpenPopover(null)
-    }
-    const offWindowHiding = window.api.onWindowHiding(handleHiding)
-    // const offWindowBlur = window.api.onWindowBlur(handleHiding)
-    window.addEventListener('blur', handleHiding)
-    return () => {
-      offWindowHiding()
-      window.removeEventListener('blur', handleHiding)
-    }
-  }, [])
 
   const setOpen = useCallback((name: string, open: boolean) => {
     setOpenPopover(open ? name : null)

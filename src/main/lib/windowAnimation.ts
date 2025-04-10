@@ -1,3 +1,4 @@
+import { windowRuntime } from './../store';
 import { screen } from 'electron';
 import { Animator, Easing } from './animation';
 import { BOUNDARY_GAP, TRIGGER_SHOW_OFFSET } from '../constants';
@@ -5,11 +6,9 @@ import { store } from '../store';
 
 const windowAnimator = new Animator();
 
-let isShow = true
 let isAnimating = false
 let timer: NodeJS.Timeout | null = null
 let canAnimate = true
-let isPin = false
 export const startMouseTracking = () => {
   const cursorPoint = screen.getCursorScreenPoint();
   const currentDisplay = screen.getDisplayNearestPoint(cursorPoint);
@@ -28,10 +27,10 @@ export const startMouseTracking = () => {
 
     if (canAnimate) {
       // 鼠标靠近当前屏幕右侧触发窗口滑出
-      if (x >= currentDisplay.workArea.x + currentDisplay.workArea.width - TRIGGER_SHOW_OFFSET && !isShow) {
+      if (x >= currentDisplay.workArea.x + currentDisplay.workArea.width - TRIGGER_SHOW_OFFSET && !windowRuntime.isShow) {
         showFromRight()
         canAnimate = false
-      } else if (x >= currentDisplay.workArea.x + currentDisplay.workArea.width - TRIGGER_SHOW_OFFSET && isShow) {
+      } else if (x >= currentDisplay.workArea.x + currentDisplay.workArea.width - TRIGGER_SHOW_OFFSET && windowRuntime.isShow) {
         hideToRight()
         canAnimate = false
       }
@@ -45,7 +44,7 @@ export const startMouseTracking = () => {
 export const showFromRight = () => {
   const mainWindow = globalThis["windows"].mainWindow
   if (!mainWindow) return;
-  if (isShow) return
+  if (windowRuntime.isShow) return
   if (isAnimating) return
   isAnimating = true
 
@@ -89,6 +88,7 @@ export const showFromRight = () => {
     mainWindow.focus()
   }, 0)
 
+  const isPin = store.get('settings.isPin')
   if (!isPin) {
     showOverlayWindow()
   }
@@ -106,7 +106,7 @@ export const showFromRight = () => {
     },
     () => {
       isAnimating = false
-      isShow = true
+      windowRuntime.isShow = true
     },
     Easing.easeOut
   );
@@ -116,20 +116,15 @@ export const hideToRight = () => {
   const mainWindow = globalThis["windows"].mainWindow
   if (!mainWindow) return;
   if (isAnimating) return
-  if (!isShow) return
+  if (!windowRuntime.isShow) return
   isAnimating = true
-  const size = screen.getDisplayNearestPoint(screen.getCursorScreenPoint())
+  const currentDisplay = screen.getDisplayNearestPoint(screen.getCursorScreenPoint())
   const bounds = mainWindow.getBounds();
-  const displayBounds = size.bounds;
-
-  if (!isPin) {
-    hideOverlayWindow()
-  }
 
   // 起始位置（当前位置）
   const startX = bounds.x;
   // 目标位置（屏幕右侧外）
-  const endX = displayBounds.width;
+  const endX = currentDisplay.workArea.x + currentDisplay.workArea.width;
 
   // 开始动画
   windowAnimator.animate(
@@ -145,7 +140,7 @@ export const hideToRight = () => {
     () => {
       mainWindow.hide()
       isAnimating = false
-      isShow = false
+      windowRuntime.isShow = false
     },
     Easing.easeOut
   );

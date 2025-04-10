@@ -1,20 +1,20 @@
-import { RecipeState } from "./types"
 import { createZustandStore } from "../utils/helper"
 import { produce } from 'immer'
-
+import { tipcClient } from "@renderer/lib/client"
+import { RecipeState } from '@shared/types'
 const initialState = {
   recipes: [],
 }
 
-export const useRecipestore = createZustandStore<RecipeState>("recipe")(() => initialState)
+export const useRecipeStore = createZustandStore<RecipeState>("recipe")(() => initialState)
 
-const set = useRecipestore.setState
+const set = useRecipeStore.setState
 class RecipeActions {
 
   async fetchRecipes() {
-    const recipes = await window.electron.ipcRenderer.invoke('db:fetchRecipes')
+    const recipes = await tipcClient?.getRecipes()
     set(state => produce(state, draft => {
-      draft.recipes = recipes
+      draft.recipes = recipes || []
     }))
     return recipes
   }

@@ -17,7 +17,8 @@
 
 // import { userDataRecipesPath } from "@renderer/environment-remote";
 // import { asarRecipesPath } from "@renderer/helpers/assr-helpers";
-import { IRecipe } from "@renderer/store/recipe/types";
+import { tipcClient } from "@renderer/lib/client";
+import { IRecipe } from "@shared/types";
 // import { ensureDirSync, pathExistsSync, PathOrFileDescriptor } from "fs-extra";
 // import { join } from "path";
 
@@ -50,7 +51,7 @@ export default class ServerApi {
   recipes: IRecipe[] = [];
 
   async getServices() {
-    let services = await window.electron.ipcRenderer.invoke('db:getServices')
+    let services = await tipcClient?.getServices();
 
     // services = await this._mapServiceModels(services)
     return services

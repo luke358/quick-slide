@@ -108,7 +108,6 @@ export function createMainWindow() {
   mainWindow.on('resize', () => {
     if (!mainWindow) return;
     const [width, height] = mainWindow.getSize();
-    console.log('resize', width, height)
     store.set('windowState', {
       ...windowState,
       width,

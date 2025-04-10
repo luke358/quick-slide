@@ -1,9 +1,8 @@
 import { serviceActions } from '@renderer/store/services/store';
-import { ElectronWebView } from '@renderer/store/services/types';
 import { FC, memo, useCallback, useEffect, useRef } from 'react';
-import { IService } from '@renderer/store/services/types';
 import { DidFailLoadEvent, DidNavigateEvent, DidNavigateInPageEvent } from 'electron';
 import { uselastServiceUrls } from '@renderer/store/services/hooks';
+import { ElectronWebView, IService } from '@shared/types';
 
 const normalizeUrl = (url: string) => url.replace(/\/$/, '');
 

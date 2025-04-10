@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 // import icon from '../../resources/icon.png?asset'
-import { registerDatabaseIPC } from './db';
+// import { registerDatabaseIPC } from './db';
 import { router } from './tipc';
 import { registerIpcMain } from '@egoist/tipc/main';
 import isDev from 'electron-is-dev';
@@ -25,7 +25,7 @@ function bootstrap() {
 
     createMainWindow()
 
-    await registerDatabaseIPC()
+    // await registerDatabaseIPC()
     registerIpcMain(router)
 
     app.on('activate', function () {
@@ -41,8 +41,6 @@ function bootstrap() {
     app.dock.hide(); // 隐藏 Dock 图标
 
     startMouseTracking();
-
-    await registerDatabaseIPC()
 
     ipcMain.on('ping', () => console.log('pong'))
 

@@ -1,5 +1,5 @@
-import { Services } from "@prisma/client";
-import { IRecipe } from "../recipe/types";
+import { Prisma, Services } from "@prisma/client";
+import { IRecipe } from "./recipe";
 export type ElectronWebView = Electron.WebviewTag
 
 // 定义运行时状态的 key
@@ -46,3 +46,7 @@ export interface ServiceState {
   serviceUsed: Set<string>;
   lastServiceUrls: Record<string, string>;
 }
+
+export type ServiceWithRecipe = Prisma.ServicesGetPayload<{
+  include: { recipe: true }
+}>

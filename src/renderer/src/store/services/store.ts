@@ -1,10 +1,11 @@
 import { createZustandStore } from "../utils/helper";
-import { IService, RUNTIME_STATE_KEYS, RuntimeState, ServiceState } from "./types";
 import ms from "ms";
 import { persist } from 'zustand/middleware'
 import { debounce, omit } from "lodash-es";
 import { WebviewTag } from "electron";
 import { Services } from "@prisma/client";
+import { tipcClient } from "@renderer/lib/client";
+import { IService, RUNTIME_STATE_KEYS, RuntimeState, ServiceState, ServiceWithRecipe } from "@shared/types";
 
 const initialState = {
   services: [],
@@ -105,7 +106,7 @@ class ServiceActions {
   // Fetch
 
   async fetchServices() {
-    const services = await window.electron.ipcRenderer.invoke('db:getServices') as IService[]
+    const services = await tipcClient?.getServices() || []
     const mergedServices = mergeServiceData(services, get().services)
     const activeServiceId = get().activeServiceId ? get().activeServiceId : services?.[0]?.serviceId
     if (activeServiceId) {
@@ -129,16 +130,19 @@ class ServiceActions {
     if (!services) return;
     const lastServiceUrls = { ...get().lastServiceUrls };
     delete lastServiceUrls[serviceId]
-    await window.electron.ipcRenderer.invoke('db:deleteService', serviceId)
+    await tipcClient?.deleteService(serviceId)
     if (get().activeServiceId === serviceId) {
       set(() => ({ activeServiceId: services[0]?.serviceId, lastServiceUrls }))
     }
     set(() => ({ services, lastServiceUrls }))
   }
 
-  updateService<K extends keyof Services>(service: IService, key: K, value: Services[K]) {
-    // TODO: 修改数据库
-    window.electron.ipcRenderer.invoke('db:updateService', { ...omit(service, ...RUNTIME_STATE_KEYS, 'id'), [key]: value })
+  async updateService<K extends keyof Services>(service: IService, key: K, value: Services[K]) {
+    const serviceData: Services = {
+      ...omit(service, ...RUNTIME_STATE_KEYS),
+      [key]: value
+    }
+    await tipcClient?.updateService(serviceData)
     set((state) => ({ services: state.services.map(s => s.serviceId === service.serviceId ? { ...s, [key]: value } : s) }))
   }
   updateRuntimeState<K extends keyof RuntimeState>(service: IService, key: K, value: RuntimeState[K]) {
@@ -238,13 +242,15 @@ const getDefaultRuntimeState = (serviceId: string): RuntimeState => ({
   }
 })
 
-export const mergeServiceData = (newServices: IService[], existingServices: IService[]): IService[] => {
+export const mergeServiceData = (newServices: ServiceWithRecipe[], existingServices: IService[]): IService[] => {
   return newServices.map(newService => {
     const existingService = existingServices.find(s => s.serviceId === newService.serviceId)
     if (!existingService) {
       return {
         ...newService,
-        ...getDefaultRuntimeState(newService.serviceId)
+        ...getDefaultRuntimeState(newService.serviceId),
+        lastHibernated: null,
+        lastUsed: Date.now()
       }
     }
 
@@ -257,6 +263,8 @@ export const mergeServiceData = (newServices: IService[], existingServices: ISer
       isHibernating: existingService.isHibernating,
       isLoading: existingService.isLoading,
       isError: existingService.isError,
+      lastHibernated: existingService.lastHibernated,
+      lastUsed: existingService.lastUsed,
       shareWithWebview: existingService.shareWithWebview
     }
   })

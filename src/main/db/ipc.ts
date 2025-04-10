@@ -210,67 +210,35 @@ export async function initTestData() {
   // })
 }
 
-export async function registerDatabaseIPC() {
+// export async function registerDatabaseIPC() {
 
-  ipcMain.handle('db:fetchRecipes', async () => {
-    const recipes = await prisma.recipes.findMany()
-    return recipes
-  })
-  await initTestData()
-  ipcMain.handle('db:createService', async (_, service) => {
-    return await prisma.services.create({
-      data: service
-    })
-  })
+//   await initTestData()
 
-  ipcMain.handle('db:getServices', async () => {
-    const services = await prisma.services.findMany({
-      include: {
-        recipe: true
-      }
-    })
-    return services
-  })
-  ipcMain.handle('db:updateService', async (_, service) => {
-    console.log(service, 'db:updateService')
-    return await prisma.services.update({
-      where: { serviceId: service.serviceId },
-      data: service
-    })
-  })
+//   ipcMain.handle('download-icon', async (_, { serviceName, iconUrl }) => {
+//     try {
+//       const iconDir = path.join(app.getPath('userData'), 'icons')
+//       if (!existsSync(iconDir)) {
+//         mkdirSync(iconDir)
+//       }
 
-  ipcMain.handle('db:deleteService', async (_, serviceId) => {
-    return await prisma.services.delete({
-      where: { serviceId }
-    })
-  })
+//       const iconPath = path.join(iconDir, `${serviceName}.ico`)
 
+//       const win = BrowserWindow.getFocusedWindow();
+//       if (!win) return null
 
-  ipcMain.handle('download-icon', async (_, { serviceName, iconUrl }) => {
-    try {
-      const iconDir = path.join(app.getPath('userData'), 'icons')
-      if (!existsSync(iconDir)) {
-        mkdirSync(iconDir)
-      }
+//       await download(win, iconUrl, {
+//         directory: iconDir,
+//         filename: `${serviceName}.ico`
+//       })
 
-      const iconPath = path.join(iconDir, `${serviceName}.ico`)
+//       // 读取并转换为 base64
+//       const iconData = readFileSync(iconPath)
+//       const base64 = `data:image/x-icon;base64,${iconData.toString('base64')}`
 
-      const win = BrowserWindow.getFocusedWindow();
-      if (!win) return null
-
-      await download(win, iconUrl, {
-        directory: iconDir,
-        filename: `${serviceName}.ico`
-      })
-
-      // 读取并转换为 base64
-      const iconData = readFileSync(iconPath)
-      const base64 = `data:image/x-icon;base64,${iconData.toString('base64')}`
-
-      return base64
-    } catch (error) {
-      console.error('Error in main process:', error)
-      return null
-    }
-  })
-}
+//       return base64
+//     } catch (error) {
+//       console.error('Error in main process:', error)
+//       return null
+//     }
+//   })
+// }

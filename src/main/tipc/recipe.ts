@@ -4,8 +4,13 @@ import { t } from './_instance';
 import { app } from 'electron';
 import path from 'path';
 import { readFile } from 'fs/promises';
+import { prisma } from '../db/_instance';
 
 export const recipeRoute = {
+  getRecipes: t.procedure.action(async () => {
+    const recipes = await prisma.recipes.findMany()
+    return recipes
+  }),
   getRecipeIcon: t.procedure.input<{ icon: string, recipeName: string }>().action(async ({ input }) => {
     const { icon, recipeName } = input
     try {

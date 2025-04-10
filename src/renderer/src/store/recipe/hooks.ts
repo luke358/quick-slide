@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { useRecipestore, recipeActions } from "./store"
+import { useRecipeStore, recipeActions } from "./store"
 
 export const useRecipes = () => {
 
@@ -11,7 +11,7 @@ export const useRecipes = () => {
   return {
     isLoading,
     isError,
-    recipes: useRecipestore(state => state.recipes)
+    recipes: useRecipeStore(state => state.recipes)
   }
 }
 

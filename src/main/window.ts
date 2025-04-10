@@ -95,6 +95,10 @@ export function createMainWindow() {
     }
   })
 
+  mainWindow.webContents.on('will-attach-webview', (_e, webPreferences) => {
+    webPreferences.preload = join(__dirname, '../preload/webview.mjs')
+  })
+
   mainWindow.on('blur', () => {
     const preferences = store.get('preferences') || {}
     if (preferences.isPin) return

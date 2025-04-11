@@ -1,10 +1,10 @@
 {
-  "name": "monitor-events",
+  "name": "mouse-click-outside",
   "version": "0.0.0",
   "main": "index.js",
   "types": "index.d.ts",
   "napi": {
-    "name": "monitor-events",
+    "name": "mouse-click-outside",
     "triples": {}
   },
   "license": "MIT",

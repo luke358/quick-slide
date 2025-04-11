@@ -71,9 +71,9 @@ importers:
       lucide-react:
         specifier: ^0.456.0
         version: 0.456.0(react@18.3.1)
-      monitor-events:
-        specifier: ./monitor-events
-        version: link:monitor-events
+      mouse-click-outside:
+        specifier: ./mouse-click-outside
+        version: link:mouse-click-outside
       ms:
         specifier: ^2.1.3
         version: 2.1.3

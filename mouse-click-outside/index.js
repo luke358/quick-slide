@@ -32,24 +32,24 @@ switch (platform) {
   case 'android':
     switch (arch) {
       case 'arm64':
-        localFileExisted = existsSync(join(__dirname, 'monitor-events.android-arm64.node'))
+        localFileExisted = existsSync(join(__dirname, 'mouse-click-outside.android-arm64.node'))
         try {
           if (localFileExisted) {
-            nativeBinding = require('./monitor-events.android-arm64.node')
+            nativeBinding = require('./mouse-click-outside.android-arm64.node')
           } else {
-            nativeBinding = require('monitor-events-android-arm64')
+            nativeBinding = require('mouse-click-outside-android-arm64')
           }
         } catch (e) {
           loadError = e
         }
         break
       case 'arm':
-        localFileExisted = existsSync(join(__dirname, 'monitor-events.android-arm-eabi.node'))
+        localFileExisted = existsSync(join(__dirname, 'mouse-click-outside.android-arm-eabi.node'))
         try {
           if (localFileExisted) {
-            nativeBinding = require('./monitor-events.android-arm-eabi.node')
+            nativeBinding = require('./mouse-click-outside.android-arm-eabi.node')
           } else {
-            nativeBinding = require('monitor-events-android-arm-eabi')
+            nativeBinding = require('mouse-click-outside-android-arm-eabi')
           }
         } catch (e) {
           loadError = e
@@ -63,13 +63,13 @@ switch (platform) {
     switch (arch) {
       case 'x64':
         localFileExisted = existsSync(
-          join(__dirname, 'monitor-events.win32-x64-msvc.node')
+          join(__dirname, 'mouse-click-outside.win32-x64-msvc.node')
         )
         try {
           if (localFileExisted) {
-            nativeBinding = require('./monitor-events.win32-x64-msvc.node')
+            nativeBinding = require('./mouse-click-outside.win32-x64-msvc.node')
           } else {
-            nativeBinding = require('monitor-events-win32-x64-msvc')
+            nativeBinding = require('mouse-click-outside-win32-x64-msvc')
           }
         } catch (e) {
           loadError = e
@@ -77,13 +77,13 @@ switch (platform) {
         break
       case 'ia32':
         localFileExisted = existsSync(
-          join(__dirname, 'monitor-events.win32-ia32-msvc.node')
+          join(__dirname, 'mouse-click-outside.win32-ia32-msvc.node')
         )
         try {
           if (localFileExisted) {
-            nativeBinding = require('./monitor-events.win32-ia32-msvc.node')
+            nativeBinding = require('./mouse-click-outside.win32-ia32-msvc.node')
           } else {
-            nativeBinding = require('monitor-events-win32-ia32-msvc')
+            nativeBinding = require('mouse-click-outside-win32-ia32-msvc')
           }
         } catch (e) {
           loadError = e
@@ -91,13 +91,13 @@ switch (platform) {
         break
       case 'arm64':
         localFileExisted = existsSync(
-          join(__dirname, 'monitor-events.win32-arm64-msvc.node')
+          join(__dirname, 'mouse-click-outside.win32-arm64-msvc.node')
         )
         try {
           if (localFileExisted) {
-            nativeBinding = require('./monitor-events.win32-arm64-msvc.node')
+            nativeBinding = require('./mouse-click-outside.win32-arm64-msvc.node')
           } else {
-            nativeBinding = require('monitor-events-win32-arm64-msvc')
+            nativeBinding = require('mouse-click-outside-win32-arm64-msvc')
           }
         } catch (e) {
           loadError = e
@@ -108,23 +108,23 @@ switch (platform) {
     }
     break
   case 'darwin':
-    localFileExisted = existsSync(join(__dirname, 'monitor-events.darwin-universal.node'))
+    localFileExisted = existsSync(join(__dirname, 'mouse-click-outside.darwin-universal.node'))
     try {
       if (localFileExisted) {
-        nativeBinding = require('./monitor-events.darwin-universal.node')
+        nativeBinding = require('./mouse-click-outside.darwin-universal.node')
       } else {
-        nativeBinding = require('monitor-events-darwin-universal')
+        nativeBinding = require('mouse-click-outside-darwin-universal')
       }
       break
     } catch {}
     switch (arch) {
       case 'x64':
-        localFileExisted = existsSync(join(__dirname, 'monitor-events.darwin-x64.node'))
+        localFileExisted = existsSync(join(__dirname, 'mouse-click-outside.darwin-x64.node'))
         try {
           if (localFileExisted) {
-            nativeBinding = require('./monitor-events.darwin-x64.node')
+            nativeBinding = require('./mouse-click-outside.darwin-x64.node')
           } else {
-            nativeBinding = require('monitor-events-darwin-x64')
+            nativeBinding = require('mouse-click-outside-darwin-x64')
           }
         } catch (e) {
           loadError = e
@@ -132,13 +132,13 @@ switch (platform) {
         break
       case 'arm64':
         localFileExisted = existsSync(
-          join(__dirname, 'monitor-events.darwin-arm64.node')
+          join(__dirname, 'mouse-click-outside.darwin-arm64.node')
         )
         try {
           if (localFileExisted) {
-            nativeBinding = require('./monitor-events.darwin-arm64.node')
+            nativeBinding = require('./mouse-click-outside.darwin-arm64.node')
           } else {
-            nativeBinding = require('monitor-events-darwin-arm64')
+            nativeBinding = require('mouse-click-outside-darwin-arm64')
           }
         } catch (e) {
           loadError = e
@@ -152,12 +152,12 @@ switch (platform) {
     if (arch !== 'x64') {
       throw new Error(`Unsupported architecture on FreeBSD: ${arch}`)
     }
-    localFileExisted = existsSync(join(__dirname, 'monitor-events.freebsd-x64.node'))
+    localFileExisted = existsSync(join(__dirname, 'mouse-click-outside.freebsd-x64.node'))
     try {
       if (localFileExisted) {
-        nativeBinding = require('./monitor-events.freebsd-x64.node')
+        nativeBinding = require('./mouse-click-outside.freebsd-x64.node')
       } else {
-        nativeBinding = require('monitor-events-freebsd-x64')
+        nativeBinding = require('mouse-click-outside-freebsd-x64')
       }
     } catch (e) {
       loadError = e
@@ -168,26 +168,26 @@ switch (platform) {
       case 'x64':
         if (isMusl()) {
           localFileExisted = existsSync(
-            join(__dirname, 'monitor-events.linux-x64-musl.node')
+            join(__dirname, 'mouse-click-outside.linux-x64-musl.node')
           )
           try {
             if (localFileExisted) {
-              nativeBinding = require('./monitor-events.linux-x64-musl.node')
+              nativeBinding = require('./mouse-click-outside.linux-x64-musl.node')
             } else {
-              nativeBinding = require('monitor-events-linux-x64-musl')
+              nativeBinding = require('mouse-click-outside-linux-x64-musl')
             }
           } catch (e) {
             loadError = e
           }
         } else {
           localFileExisted = existsSync(
-            join(__dirname, 'monitor-events.linux-x64-gnu.node')
+            join(__dirname, 'mouse-click-outside.linux-x64-gnu.node')
           )
           try {
             if (localFileExisted) {
-              nativeBinding = require('./monitor-events.linux-x64-gnu.node')
+              nativeBinding = require('./mouse-click-outside.linux-x64-gnu.node')
             } else {
-              nativeBinding = require('monitor-events-linux-x64-gnu')
+              nativeBinding = require('mouse-click-outside-linux-x64-gnu')
             }
           } catch (e) {
             loadError = e
@@ -197,26 +197,26 @@ switch (platform) {
       case 'arm64':
         if (isMusl()) {
           localFileExisted = existsSync(
-            join(__dirname, 'monitor-events.linux-arm64-musl.node')
+            join(__dirname, 'mouse-click-outside.linux-arm64-musl.node')
           )
           try {
             if (localFileExisted) {
-              nativeBinding = require('./monitor-events.linux-arm64-musl.node')
+              nativeBinding = require('./mouse-click-outside.linux-arm64-musl.node')
             } else {
-              nativeBinding = require('monitor-events-linux-arm64-musl')
+              nativeBinding = require('mouse-click-outside-linux-arm64-musl')
             }
           } catch (e) {
             loadError = e
           }
         } else {
           localFileExisted = existsSync(
-            join(__dirname, 'monitor-events.linux-arm64-gnu.node')
+            join(__dirname, 'mouse-click-outside.linux-arm64-gnu.node')
           )
           try {
             if (localFileExisted) {
-              nativeBinding = require('./monitor-events.linux-arm64-gnu.node')
+              nativeBinding = require('./mouse-click-outside.linux-arm64-gnu.node')
             } else {
-              nativeBinding = require('monitor-events-linux-arm64-gnu')
+              nativeBinding = require('mouse-click-outside-linux-arm64-gnu')
             }
           } catch (e) {
             loadError = e
@@ -226,26 +226,26 @@ switch (platform) {
       case 'arm':
         if (isMusl()) {
           localFileExisted = existsSync(
-            join(__dirname, 'monitor-events.linux-arm-musleabihf.node')
+            join(__dirname, 'mouse-click-outside.linux-arm-musleabihf.node')
           )
           try {
             if (localFileExisted) {
-              nativeBinding = require('./monitor-events.linux-arm-musleabihf.node')
+              nativeBinding = require('./mouse-click-outside.linux-arm-musleabihf.node')
             } else {
-              nativeBinding = require('monitor-events-linux-arm-musleabihf')
+              nativeBinding = require('mouse-click-outside-linux-arm-musleabihf')
             }
           } catch (e) {
             loadError = e
           }
         } else {
           localFileExisted = existsSync(
-            join(__dirname, 'monitor-events.linux-arm-gnueabihf.node')
+            join(__dirname, 'mouse-click-outside.linux-arm-gnueabihf.node')
           )
           try {
             if (localFileExisted) {
-              nativeBinding = require('./monitor-events.linux-arm-gnueabihf.node')
+              nativeBinding = require('./mouse-click-outside.linux-arm-gnueabihf.node')
             } else {
-              nativeBinding = require('monitor-events-linux-arm-gnueabihf')
+              nativeBinding = require('mouse-click-outside-linux-arm-gnueabihf')
             }
           } catch (e) {
             loadError = e
@@ -255,26 +255,26 @@ switch (platform) {
       case 'riscv64':
         if (isMusl()) {
           localFileExisted = existsSync(
-            join(__dirname, 'monitor-events.linux-riscv64-musl.node')
+            join(__dirname, 'mouse-click-outside.linux-riscv64-musl.node')
           )
           try {
             if (localFileExisted) {
-              nativeBinding = require('./monitor-events.linux-riscv64-musl.node')
+              nativeBinding = require('./mouse-click-outside.linux-riscv64-musl.node')
             } else {
-              nativeBinding = require('monitor-events-linux-riscv64-musl')
+              nativeBinding = require('mouse-click-outside-linux-riscv64-musl')
             }
           } catch (e) {
             loadError = e
           }
         } else {
           localFileExisted = existsSync(
-            join(__dirname, 'monitor-events.linux-riscv64-gnu.node')
+            join(__dirname, 'mouse-click-outside.linux-riscv64-gnu.node')
           )
           try {
             if (localFileExisted) {
-              nativeBinding = require('./monitor-events.linux-riscv64-gnu.node')
+              nativeBinding = require('./mouse-click-outside.linux-riscv64-gnu.node')
             } else {
-              nativeBinding = require('monitor-events-linux-riscv64-gnu')
+              nativeBinding = require('mouse-click-outside-linux-riscv64-gnu')
             }
           } catch (e) {
             loadError = e
@@ -283,13 +283,13 @@ switch (platform) {
         break
       case 's390x':
         localFileExisted = existsSync(
-          join(__dirname, 'monitor-events.linux-s390x-gnu.node')
+          join(__dirname, 'mouse-click-outside.linux-s390x-gnu.node')
         )
         try {
           if (localFileExisted) {
-            nativeBinding = require('./monitor-events.linux-s390x-gnu.node')
+            nativeBinding = require('./mouse-click-outside.linux-s390x-gnu.node')
           } else {
-            nativeBinding = require('monitor-events-linux-s390x-gnu')
+            nativeBinding = require('mouse-click-outside-linux-s390x-gnu')
           }
         } catch (e) {
           loadError = e
@@ -310,7 +310,7 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { addClickOutsideListen, removeClickOutsideListen } = nativeBinding
+const { addClickOutsideListener, removeClickOutsideListener } = nativeBinding
 
-module.exports.addClickOutsideListen = addClickOutsideListen
-module.exports.removeClickOutsideListen = removeClickOutsideListen
+module.exports.addClickOutsideListener = addClickOutsideListener
+module.exports.removeClickOutsideListener = removeClickOutsideListener

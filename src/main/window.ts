@@ -5,7 +5,7 @@ import { is } from "@electron-toolkit/utils";
 import { store } from "./store";
 import { BOUNDARY_GAP } from "./constants";
 import { hideToRight } from "./lib/windowAnimation";
-import { addClickOutsideListen } from 'monitor-events'
+import { addClickOutsideListener } from 'mouse-click-outside'
 
 const windows = {
   mainWindow: null as BrowserWindow | null,
@@ -65,7 +65,7 @@ export function createMainWindow() {
   mainWindow.webContents.on('will-attach-webview', (_e, webPreferences) => {
     webPreferences.preload = join(__dirname, '../preload/webview.mjs')
   })
-  addClickOutsideListen(() => {
+  addClickOutsideListener(() => {
     const preferences = store.get('preferences') || {}
     if (preferences.isPin) return
     hideToRight()

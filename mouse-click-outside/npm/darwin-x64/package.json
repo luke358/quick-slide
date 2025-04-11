@@ -1,5 +1,5 @@
 {
-  "name": "monitor-events-darwin-x64",
+  "name": "mouse-click-outside-darwin-x64",
   "version": "0.0.0",
   "os": [
     "darwin"
@@ -7,9 +7,9 @@
   "cpu": [
     "x64"
   ],
-  "main": "monitor-events.darwin-x64.node",
+  "main": "mouse-click-outside.darwin-x64.node",
   "files": [
-    "monitor-events.darwin-x64.node"
+    "mouse-click-outside.darwin-x64.node"
   ],
   "license": "MIT",
   "engines": {

@@ -1,5 +1,5 @@
 {
-  "name": "monitor-events-linux-x64-gnu",
+  "name": "mouse-click-outside-linux-x64-gnu",
   "version": "0.0.0",
   "os": [
     "linux"
@@ -7,9 +7,9 @@
   "cpu": [
     "x64"
   ],
-  "main": "monitor-events.linux-x64-gnu.node",
+  "main": "mouse-click-outside.linux-x64-gnu.node",
   "files": [
-    "monitor-events.linux-x64-gnu.node"
+    "mouse-click-outside.linux-x64-gnu.node"
   ],
   "license": "MIT",
   "engines": {

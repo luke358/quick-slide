@@ -6,6 +6,7 @@ import { store } from "./store";
 import { BOUNDARY_GAP } from "./constants";
 import { hideToRight } from "./lib/windowAnimation";
 import { addClickOutsideListener } from 'mouse-click-outside'
+import { platform } from "os";
 
 const windows = {
   mainWindow: null as BrowserWindow | null,
@@ -65,16 +66,19 @@ export function createMainWindow() {
   mainWindow.webContents.on('will-attach-webview', (_e, webPreferences) => {
     webPreferences.preload = join(__dirname, '../preload/webview.mjs')
   })
-  addClickOutsideListener(() => {
-    const preferences = store.get('preferences') || {}
-    if (preferences.isPin) return
-    hideToRight()
-  })
-  // mainWindow.on('blur', () => {
-  //   const preferences = store.get('preferences') || {}
-  //   if (preferences.isPin) return
-  //   hideToRight()
-  // })
+  if (platform() === 'darwin') {
+    addClickOutsideListener(() => {
+      const preferences = store.get('preferences') || {}
+      if (preferences.isPin) return
+      hideToRight()
+    })
+  } else {
+    mainWindow.on('blur', () => {
+      const preferences = store.get('preferences') || {}
+      if (preferences.isPin) return
+      hideToRight()
+    })
+  }
 
   mainWindow.on('resize', () => {
     if (!mainWindow) return;

@@ -5,6 +5,7 @@ import { is } from "@electron-toolkit/utils";
 import { store } from "./store";
 import { BOUNDARY_GAP } from "./constants";
 import { hideToRight } from "./lib/windowAnimation";
+import { addClickOutsideListen } from 'monitor-events'
 
 const windows = {
   mainWindow: null as BrowserWindow | null,
@@ -32,41 +33,6 @@ export function createMainWindow() {
   const x = currentDisplay.workArea.x + currentDisplay.workArea.width - width - BOUNDARY_GAP;
   const y = currentDisplay.workArea.y + Math.round((currentDisplay.workArea.height - height) / 2);
 
-  // const overlayWindow = createWindow({
-  //   width: 0,
-  //   height: 0,
-  //   x: 0,
-  //   y: 0,
-  //   frame: false,
-  //   hasShadow: false,
-  //   transparent: true,
-  //   show: false,
-  //   alwaysOnTop: true,
-  //   type: 'toolbar',
-  //   skipTaskbar: true,
-  //   fullscreenable: false,
-  //   focusable: true,
-  //   titleBarStyle: 'hidden',
-  //   roundedCorners: false,  // macOS
-  //   ...(process.platform === 'linux' ? { icon } : {}),
-  //   hiddenInMissionControl: true,
-  //   resizable: true,
-  //   webPreferences: {
-  //     preload: join(__dirname, '../preload/index.mjs'),
-  //     nodeIntegration: true,
-  //   }
-  // })
-  // if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-  //   overlayWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/#/overlay`)
-  // } else {
-  //   overlayWindow.loadFile(join(__dirname, '../renderer/index.html'), {
-  //     hash: 'overlay'
-  //   })
-  // }
-  // overlayWindow.setIgnoreMouseEvents(true, { forward: true });
-
-  // windows.overlayWindow = overlayWindow
-
   const mainWindow = createWindow({
     width,
     height,
@@ -92,18 +58,23 @@ export function createMainWindow() {
       nodeIntegration: true,
       webviewTag: true,
       plugins: true,
+      sandbox: false,
     }
   })
 
   mainWindow.webContents.on('will-attach-webview', (_e, webPreferences) => {
     webPreferences.preload = join(__dirname, '../preload/webview.mjs')
   })
-
-  mainWindow.on('blur', () => {
+  addClickOutsideListen(() => {
     const preferences = store.get('preferences') || {}
     if (preferences.isPin) return
     hideToRight()
   })
+  // mainWindow.on('blur', () => {
+  //   const preferences = store.get('preferences') || {}
+  //   if (preferences.isPin) return
+  //   hideToRight()
+  // })
 
   mainWindow.on('resize', () => {
     if (!mainWindow) return;

@@ -1,11 +1,11 @@
 import { FC, memo, useCallback } from 'react';
 import { Webview } from './Webview';
-import { IService } from '@renderer/store/services/types';
 import { cn } from '@renderer/lib/utils';
 import { WebViewEnable } from './WebViewEnable';
 import { WebViewHibernate } from './WebViewHibernate';
 import { WebviewLoad } from './WebviewLoad';
 import { WebViewError } from './WebviewError';
+import { IService } from '@shared/types';
 
 interface ServiceViewProps extends React.HTMLAttributes<HTMLDivElement> {
   service: IService

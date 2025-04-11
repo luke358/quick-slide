@@ -1,5 +1,5 @@
 import { serviceActions } from "@renderer/store/services/store";
-import { IService } from "@renderer/store/services/types";
+import { IService } from "@shared/types";
 import { FC } from "react";
 
 export const WebViewHibernate: FC<{ service: IService }> = ({ service }) => {

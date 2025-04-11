@@ -10,6 +10,9 @@
     "src/main/db/*.ts"
   ],
   "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "Bundler",
+    "target": "esnext",
     "composite": true,
     "jsx": "react-jsx",
     "baseUrl": ".",

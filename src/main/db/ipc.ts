@@ -1,11 +1,4 @@
 
-import { app, BrowserWindow, ipcMain } from "electron"
-import { prisma } from "./_instance"
-import path from "path"
-import { mkdirSync, readFileSync } from "fs"
-import { existsSync } from "fs"
-import { download } from "electron-dl"
-
 export async function initTestData() {
   // const services: Prisma.ServicesCreateInput[] = [
   //   {

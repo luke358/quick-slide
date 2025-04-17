@@ -5,7 +5,10 @@ import { debounce, omit } from "lodash-es";
 import { WebviewTag } from "electron";
 import { Services } from "@prisma/client";
 import { tipcClient } from "@renderer/lib/client";
-import { IService, RUNTIME_STATE_KEYS, RuntimeState, ServiceState, ServiceWithRecipe } from "@shared/types";
+import { IService, Recipes, RUNTIME_STATE_KEYS, RuntimeState, ServiceState } from "@shared/types";
+import { recipeActions } from "../recipe/store";
+import { queryClient } from "@renderer/lib/query-client";
+import { produce } from "immer";
 
 const initialState = {
   services: [],
@@ -39,12 +42,6 @@ class ServiceActions {
     this.serviceMaintenanceTick()
   }
 
-  toggleMute(serviceId: string) {
-    const service = this._one(serviceId);
-    if (!service) return;
-    this.updateService(service, 'isMuted', !service.isMuted)
-    service.webview?.setAudioMuted(!service.isMuted)
-  }
   setActive(id: string | null) {
     if (!id) {
       set(() => ({ activeServiceId: null }))
@@ -69,7 +66,7 @@ class ServiceActions {
     set((state) => ({ services: state.services.map(service => service.serviceId === serviceId ? { ...service, lastHibernated: null, isHibernating: false, lastUsed: Date.now() } : service) }))
   }
   canHibernate(service: IService) {
-    return service?.isHibernateEnabled && !service?.isMediaPlaying
+    return service?.settings.isHibernateEnabled && !service?.isMediaPlaying
   }
   hibernate({ serviceId }: { serviceId: string }) {
     const service = this._one(serviceId);
@@ -104,10 +101,12 @@ class ServiceActions {
   }
 
   // Fetch
-
   async fetchServices() {
+    const recipes = await queryClient.fetchQuery({ queryKey: ['recipes'], queryFn: recipeActions.fetchRecipes })
     const services = await tipcClient?.getServices() || []
-    const mergedServices = mergeServiceData(services, get().services)
+    const mergedServices = mergeServiceData(services, get().services, recipes)
+    console.log(mergedServices, 'mergedServices')
+
     const activeServiceId = get().activeServiceId ? get().activeServiceId : services?.[0]?.serviceId
     if (activeServiceId) {
       set((state) => ({ services: mergedServices, activeServiceId, serviceUsed: new Set(state.serviceUsed).add(activeServiceId) }))
@@ -117,34 +116,42 @@ class ServiceActions {
     return mergedServices
   }
 
-  addService(_service: IService) {
-    // set(state => {
-    //   const services = new Map(state.services);
-    //   services.set(service.id, service);
-    //   return { services };
-    // });
-  }
-
   async removeService(serviceId: string) {
     const services = get().services.filter(service => service.serviceId !== serviceId)
     if (!services) return;
-    const lastServiceUrls = { ...get().lastServiceUrls };
-    delete lastServiceUrls[serviceId]
+
     await tipcClient?.deleteService(serviceId)
-    if (get().activeServiceId === serviceId) {
-      set(() => ({ activeServiceId: services[0]?.serviceId, lastServiceUrls }))
-    }
-    set(() => ({ services, lastServiceUrls }))
+
+    set(produce((state) => {
+      delete state.lastServiceUrls[serviceId]
+      state.services = services
+
+      if (state.activeServiceId === serviceId) {
+        state.activeServiceId = services[0]?.serviceId
+      }
+    }))
   }
 
-  async updateService<K extends keyof Services>(service: IService, key: K, value: Services[K]) {
-    const serviceData: Services = {
-      ...omit(service, ...RUNTIME_STATE_KEYS),
+  async updateSettings<K extends keyof IService['settings']>(service: IService, key: K, value: IService['settings'][K]) {
+    const settingData: IService['settings'] = {
+      ...service.settings,
       [key]: value
     }
-    await tipcClient?.updateService(serviceData)
-    set((state) => ({ services: state.services.map(s => s.serviceId === service.serviceId ? { ...s, [key]: value } : s) }))
+    await tipcClient?.updateService({ ...omit(service, RUNTIME_STATE_KEYS), settings: JSON.stringify(settingData) })
+
+    if (key === 'isMuted') {
+      service.webview?.setAudioMuted(value)
+    }
   }
+
+  // async updateService<K extends keyof Services>(service: IService, key: K, value: Services[K]) {
+  //   const serviceData: Services = {
+  //     ...omit(service, ...RUNTIME_STATE_KEYS),
+  //     [key]: value
+  //   }
+  //   await tipcClient?.updateService(serviceData)
+  //   set((state) => ({ services: state.services.map(s => s.serviceId === service.serviceId ? { ...s, [key]: value } : s) }))
+  // }
   updateRuntimeState<K extends keyof RuntimeState>(service: IService, key: K, value: RuntimeState[K]) {
     set((state) => ({ services: state.services.map(s => s.serviceId === service.serviceId ? { ...s, [key]: value } : s) }))
     if (key === 'webview') {
@@ -162,11 +169,13 @@ class ServiceActions {
             this.setActive(get().services[key - 1].serviceId)
           }
           break;
+        case 'hello':
+          break;
       }
     })
   }
 
-  updatelastServiceUrls(service: IService, url?: string) {
+  updateLastServiceUrls(service: IService, url?: string) {
     if (!url) {
       set((state) => {
         const lastServiceUrls = state.lastServiceUrls
@@ -242,20 +251,33 @@ const getDefaultRuntimeState = (serviceId: string): RuntimeState => ({
   }
 })
 
-export const mergeServiceData = (newServices: ServiceWithRecipe[], existingServices: IService[]): IService[] => {
+const emptyRecipe: Recipes = {
+  recipeId: '',
+  name: '',
+  icon: '',
+  category: [],
+  version: '',
+  serviceUrl: '',
+}
+
+export const mergeServiceData = (newServices: Services[], existingServices: IService[], recipes?: Recipes[]): IService[] => {
   return newServices.map(newService => {
     const existingService = existingServices.find(s => s.serviceId === newService.serviceId)
+    const recipe = recipes?.find(r => r.recipeId === newService.recipeId)
+    console.log(newService.settings)
     if (!existingService) {
       return {
         ...newService,
+        settings: JSON.parse(newService.settings) as IService['settings'],
         ...getDefaultRuntimeState(newService.serviceId),
-        lastHibernated: null,
-        lastUsed: Date.now()
+        recipe: recipe || emptyRecipe,
       }
     }
 
     return {
       ...newService,
+      settings: JSON.parse(newService.settings),
+      recipe: recipe || emptyRecipe,
       webview: existingService.webview,
       timer: existingService.timer,
       lastPoll: existingService.lastPoll,

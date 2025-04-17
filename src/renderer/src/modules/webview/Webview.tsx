@@ -1,7 +1,7 @@
 import { serviceActions } from '@renderer/store/services/store';
 import { FC, memo, useCallback, useEffect, useRef } from 'react';
 import { DidFailLoadEvent, DidNavigateEvent, DidNavigateInPageEvent } from 'electron';
-import { uselastServiceUrls } from '@renderer/store/services/hooks';
+import { useLastServiceUrls } from '@renderer/store/services/hooks';
 import { ElectronWebView, IService } from '@shared/types';
 
 const normalizeUrl = (url: string) => url.replace(/\/$/, '');
@@ -11,7 +11,7 @@ interface WebviewProps {
 }
 export const Webview: FC<WebviewProps> = memo(({ service }) => {
   const webViewRef = useRef<ElectronWebView | null>(null)
-  const lastServiceUrls = uselastServiceUrls()
+  const lastServiceUrls = useLastServiceUrls()
   const isAttached = useRef(false)
   const didStartLoading = () => {
     if (isAttached.current) return
@@ -41,7 +41,6 @@ export const Webview: FC<WebviewProps> = memo(({ service }) => {
   }
   const domReady = useCallback(() => {
     console.log('domReady triggered:', service.name); // 添加调试日志
-    service.webview?.setAudioMuted(service.isMuted)
   }, [service.name])
   const didAttach = async () => {
     // console.log('didAttach triggered:', service.name); // 添加调试日志
@@ -57,6 +56,8 @@ export const Webview: FC<WebviewProps> = memo(({ service }) => {
         webViewRef.current?.loadURL(lastServiceUrl)
       }
     }
+
+    service.webview?.setAudioMuted(service.settings.isMuted)
     isAttached.current = true
   }
   const didFailLoad = (event: DidFailLoadEvent) => {
@@ -85,9 +86,9 @@ export const Webview: FC<WebviewProps> = memo(({ service }) => {
     const serviceUrl = normalizeUrl(service.serviceUrl);
 
     if (eventUrl && serviceUrl !== eventUrl) {
-      serviceActions.updatelastServiceUrls(service, eventUrl)
+      serviceActions.updateLastServiceUrls(service, eventUrl)
     } else {
-      serviceActions.updatelastServiceUrls(service)
+      serviceActions.updateLastServiceUrls(service)
     }
   }
   const didNavigateInPage = (event: DidNavigateInPageEvent | DidNavigateEvent) => {
@@ -96,9 +97,9 @@ export const Webview: FC<WebviewProps> = memo(({ service }) => {
 
     console.log('didNavigateInPage triggered:', event); // 添加调试日志
     if (eventUrl && serviceUrl !== eventUrl) {
-      serviceActions.updatelastServiceUrls(service, eventUrl)
+      serviceActions.updateLastServiceUrls(service, eventUrl)
     } else {
-      serviceActions.updatelastServiceUrls(service)
+      serviceActions.updateLastServiceUrls(service)
     }
   }
 

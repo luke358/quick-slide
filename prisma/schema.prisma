@@ -11,33 +11,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Recipes {
+model Services {
   id         Int      @id @default(autoincrement())
+  serviceId  String   @unique
   name       String
-  serviceUrl String
   recipeId   String
-  icon       String
+  settings   String   @default(dbgenerated("('{\"isHibernateEnabled\": false, \"isMuted\": false, \"enabled\": true}')"))
+  serviceUrl String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  isPreset   Boolean  @default(false)
-  // Favourites Favourites[]
-
-  Services Services[]
-}
-
-model Services {
-  id                 Int      @id @default(autoincrement())
-  serviceId          String   @unique
-  name               String
-  recipe             Recipes  @relation(fields: [recipeId], references: [id])
-  recipeId           Int
-  settings           String
-  serviceUrl         String
-  isHibernateEnabled Boolean  @default(false)
-  isMuted            Boolean  @default(false)
-  enabled            Boolean  @default(true)
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  version    String
 }
 
 // model Favourites {

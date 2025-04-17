@@ -11,10 +11,9 @@ interface ServiceViewProps extends React.HTMLAttributes<HTMLDivElement> {
   service: IService
 }
 export const ServiceView: FC<ServiceViewProps> = memo(({ service, className, style }) => {
-
   const renderWebview = useCallback(() => {
-    if (!service.enabled) return <WebViewEnable service={service} />
-    if (service.isHibernateEnabled && service.isHibernating) return <WebViewHibernate service={service} />
+    if (!service.settings.enabled) return <WebViewEnable service={service} />
+    if (service.settings.isHibernateEnabled && service.isHibernating) return <WebViewHibernate service={service} />
     if (service.isError) return <WebViewError />
     return <Webview service={service} />
   }, [service])

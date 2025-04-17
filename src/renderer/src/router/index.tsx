@@ -1,5 +1,6 @@
 import SlideLayout from "@renderer/layouts/SlideLayout";
 import Home from "@renderer/pages/home";
+import LinkView from "@renderer/pages/link-view";
 import Overlay from "@renderer/pages/overlay";
 import { createHashRouter } from "react-router-dom";
 
@@ -13,6 +14,10 @@ const router: ReturnType<typeof createHashRouter> = createHashRouter([
         element: <Home />
       },
     ]
+  },
+  {
+    path: '/link-view',
+    element: <LinkView />,
   },
   {
     path: '/overlay',

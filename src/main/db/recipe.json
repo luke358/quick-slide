@@ -4,6 +4,7 @@
     "icon": "https://slidepad.app/icons/todoist.com.png",
     "recipeId": "todoist.com",
     "serviceUrl": "https://todoist.com/Users/showLogin",
+    "version": "1.0.0",
     "categories": [
       "Most Used",
       "Productivity"
@@ -14,6 +15,7 @@
     "icon": "http://chat.openai.com/favicon.ico",
     "recipeId": "chat.openai.com",
     "serviceUrl": "https://chat.openai.com",
+    "version": "1.0.0",
     "categories": [
       "Most Used",
       "Productivity"
@@ -25,6 +27,7 @@
     "icon": "https://trello.com/favicon.ico",
     "recipeId": "trello.com",
     "serviceUrl": "https://trello.com",
+    "version": "1.0.0",
     "categories": [
       "Most Used",
       "Productivity"
@@ -35,6 +38,7 @@
     "icon": "https://ssl.gstatic.com/keep/keep.ico",
     "recipeId": "keep.google.com",
     "serviceUrl": "https://keep.google.com/",
+    "version": "1.0.0",
     "categories": [
       "Most Used",
       "Google",
@@ -46,6 +50,7 @@
     "icon": "https://calendar.google.com/googlecalendar/images/favicon_v2014_24.ico",
     "recipeId": "calendar.google.com",
     "serviceUrl": "https://calendar.google.com/",
+    "version": "1.0.0",
     "categories": [
       "Most Used",
       "Google",
@@ -57,6 +62,7 @@
     "icon": "https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico",
     "recipeId": "gmail.com",
     "serviceUrl": "https://gmail.com/",
+    "version": "1.0.0",
     "categories": [
       "Most Used",
       "Email"
@@ -67,6 +73,7 @@
     "icon": "https://slidepad.app/icons/youtube.com.png",
     "recipeId": "youtube.com",
     "serviceUrl": "https://youtube.com/",
+    "version": "1.0.0",
     "categories": [
       "Most Used",
       "Video"
@@ -77,6 +84,7 @@
     "icon": "https://spotify.com/favicon.ico",
     "recipeId": "spotify.com",
     "serviceUrl": "https://open.spotify.com/",
+    "version": "1.0.0",
     "categories": [
       "Most Used",
       "Music"
@@ -87,6 +95,7 @@
     "icon": "https://slidepad.app/icons/icloud.com.notes.png",
     "recipeId": "icloud.com/#notes3",
     "serviceUrl": "https://www.icloud.com/#notes3",
+    "version": "1.0.0",
     "categories": [
       "Most Used"
     ]
@@ -96,6 +105,7 @@
     "icon": "https://evernote.com/favicon.ico",
     "recipeId": "evernote.com",
     "serviceUrl": "https://www.evernote.com/Login.action",
+    "version": "1.0.0",
     "categories": [
       "Most Used",
       "Productivity"
@@ -106,6 +116,7 @@
     "icon": "https://www.notion.so/images/favicon.ico",
     "recipeId": "notion.so",
     "serviceUrl": "https://www.notion.so/login",
+    "version": "1.0.0",
     "categories": [
       "Most Used",
       "Productivity"
@@ -116,6 +127,7 @@
     "icon": "https://a.slack-edge.com/cebaa/img/icons/favicon-32.png",
     "recipeId": "slack.com",
     "serviceUrl": "https://slack.com/signin?",
+    "version": "1.0.0",
     "categories": [
       "Most Used",
       "Messaging"
@@ -126,6 +138,7 @@
     "icon": "https://slidepad.app/icons/onenote.com.ico",
     "recipeId": "onenote.com",
     "serviceUrl": "https://www.onenote.com/notebooks?auth=1",
+    "version": "1.0.0",
     "categories": [
       "Microsoft",
       "Productivity"
@@ -136,6 +149,7 @@
     "icon": "https://slidepad.app/icons/onedrive.live.com.ico",
     "recipeId": "onedrive.live.com",
     "serviceUrl": "https://onedrive.live.com/about/signin/",
+    "version": "1.0.0",
     "categories": [
       "Microsoft"
     ]
@@ -145,6 +159,7 @@
     "icon": "https://slidepad.app/icons/teams.microsoft.com.png",
     "recipeId": "teams.microsoft.com",
     "serviceUrl": "https://teams.microsoft.com/",
+    "version": "1.0.0",
     "categories": [
       "Microsoft",
       "Messaging"
@@ -156,6 +171,7 @@
     "iconWeight": 0,
     "recipeId": "google.com",
     "serviceUrl": "https://google.com/",
+    "version": "1.0.0",
     "categories": [
       "Google"
     ]
@@ -165,6 +181,7 @@
     "icon": "https://gsuite.google.com/static/favicon.ico",
     "recipeId": "gsuite.google.com",
     "serviceUrl": "https://gsuite.google.com/",
+    "version": "1.0.0",
     "categories": [
       "Google"
     ]
@@ -174,6 +191,7 @@
     "icon": "https://ssl.gstatic.com/docs/doclist/images/infinite_arrow_favicon_5.ico",
     "recipeId": "drive.google.com",
     "serviceUrl": "https://drive.google.com/",
+    "version": "1.0.0",
     "categories": [
       "Google"
     ]
@@ -183,6 +201,7 @@
     "icon": "https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico",
     "recipeId": "doc.google.com",
     "serviceUrl": "https://doc.google.com/",
+    "version": "1.0.0",
     "categories": [
       "Google"
     ]
@@ -192,6 +211,7 @@
     "icon": "https://ssl.gstatic.com/docs/spreadsheets/favicon3.ico",
     "recipeId": "spreadsheet.google.com",
     "serviceUrl": "https://spreadsheet.google.com/",
+    "version": "1.0.0",
     "categories": [
       "Google"
     ]
@@ -201,6 +221,7 @@
     "icon": "https://ssl.gstatic.com/docs/presentations/images/favicon5.ico",
     "recipeId": "slides.google.com",
     "serviceUrl": "https://slides.google.com/",
+    "version": "1.0.0",
     "categories": [
       "Google"
     ]
@@ -211,6 +232,7 @@
     "iconWeight": 0,
     "recipeId": "duckduckgo.com",
     "serviceUrl": "https://duckduckgo.com/",
+    "version": "1.0.0",
     "categories": [
       "Productivity"
     ]
@@ -220,6 +242,7 @@
     "icon": "https://www.mindmeister.com/mm_favicon.ico",
     "recipeId": "mindmeister.com",
     "serviceUrl": "https://mindmeister.com/",
+    "version": "1.0.0",
     "categories": [
       "Productivity"
     ]
@@ -229,6 +252,7 @@
     "icon": "https://asana.com/favicon.ico",
     "recipeId": "asana.com",
     "serviceUrl": "https://asana.com/",
+    "version": "1.0.0",
     "categories": [
       "Productivity"
     ]
@@ -239,6 +263,7 @@
     "iconWeight": 0,
     "recipeId": "bing.com",
     "serviceUrl": "https://bing.com/",
+    "version": "1.0.0",
     "categories": [
       "Bing"
     ]
@@ -248,6 +273,7 @@
     "icon": "https://slidepad.app/icons/icloud.com.mail.png",
     "recipeId": "icloud.com/#mail",
     "serviceUrl": "https://www.icloud.com/#mail",
+    "version": "1.0.0",
     "categories": [
       "Apple"
     ]
@@ -257,6 +283,7 @@
     "icon": "https://slidepad.app/icons/icloud.com.contacts.png",
     "recipeId": "icloud.com/#contacts",
     "serviceUrl": "https://www.icloud.com/#contacts",
+    "version": "1.0.0",
     "categories": [
       "Apple"
     ]
@@ -265,6 +292,7 @@
     "name": "Calendar",
     "recipeId": "icloud.com/#calendar",
     "serviceUrl": "https://www.icloud.com/#calendar",
+    "version": "1.0.0",
     "categories": [
       "Apple"
     ]
@@ -274,6 +302,7 @@
     "icon": "https://slidepad.app/icons/icloud.com.photos.png",
     "recipeId": "icloud.com/#photos",
     "serviceUrl": "https://www.icloud.com/#photos",
+    "version": "1.0.0",
     "categories": [
       "Apple"
     ]
@@ -283,6 +312,7 @@
     "icon": "https://slidepad.app/icons/icloud.com.icloud.drive.png",
     "recipeId": "icloud.com/#iclouddrive",
     "serviceUrl": "https://www.icloud.com/#iclouddrive",
+    "version": "1.0.0",
     "categories": [
       "Apple"
     ]
@@ -292,6 +322,7 @@
     "icon": "https://slidepad.app/icons/icloud.com.notes.png",
     "recipeId": "icloud.com/#notes3",
     "serviceUrl": "https://www.icloud.com/#notes3",
+    "version": "1.0.0",
     "categories": [
       "Apple"
     ]
@@ -301,6 +332,7 @@
     "icon": "https://slidepad.app/icons/icloud.com.reminders.png",
     "recipeId": "icloud.com/#reminders",
     "serviceUrl": "https://www.icloud.com/#reminders",
+    "version": "1.0.0",
     "categories": [
       "Apple"
     ]
@@ -310,6 +342,7 @@
     "icon": "https://slidepad.app/icons/icloud.com.pages.png",
     "recipeId": "icloud.com/#pages",
     "serviceUrl": "https://www.icloud.com/#pages",
+    "version": "1.0.0",
     "categories": [
       "Apple"
     ]
@@ -319,6 +352,7 @@
     "icon": "https://slidepad.app/icons/icloud.com.numbers.png",
     "recipeId": "icloud.com/#numbers",
     "serviceUrl": "https://www.icloud.com/#numbers",
+    "version": "1.0.0",
     "categories": [
       "Apple"
     ]
@@ -328,6 +362,7 @@
     "icon": "https://slidepad.app/icons/icloud.com.keynote.png",
     "recipeId": "icloud.com/#keynote",
     "serviceUrl": "https://www.icloud.com/#keynote",
+    "version": "1.0.0",
     "categories": [
       "Apple"
     ]
@@ -337,6 +372,7 @@
     "icon": "https://protonmail.com/favicon.ico",
     "recipeId": "protonmail.com",
     "serviceUrl": "https://mail.protonmail.com/inbox",
+    "version": "1.0.0",
     "categories": [
       "Email"
     ]
@@ -346,6 +382,7 @@
     "icon": "https://mail.zoho.com/favicon.ico",
     "recipeId": "mail.zoho.com",
     "serviceUrl": "https://mail.zoho.com/",
+    "version": "1.0.0",
     "categories": [
       "Email"
     ]
@@ -355,6 +392,7 @@
     "icon": "https://slidepad.app/icons/outlook.live.com.ico",
     "recipeId": "outlook.live.com",
     "serviceUrl": "https://outlook.live.com/mail/",
+    "version": "1.0.0",
     "categories": [
       "Microsoft",
       "Email"
@@ -365,6 +403,7 @@
     "icon": "https://app.frontapp.com/img/favicon/prod/favicon32.png",
     "recipeId": "frontapp.com",
     "serviceUrl": "https://app.frontapp.com/signin",
+    "version": "1.0.0",
     "categories": [
       "Email"
     ]
@@ -374,6 +413,7 @@
     "icon": "https://slidepad.app/icons/messenger.com.ico",
     "recipeId": "messenger.com",
     "serviceUrl": "https://messenger.com/",
+    "version": "1.0.0",
     "categories": [
       "Messaging"
     ]
@@ -383,6 +423,7 @@
     "icon": "https://web.telegram.org/z/icon-192x192.png",
     "recipeId": "web.telegram.org",
     "serviceUrl": "https://web.telegram.org/",
+    "version": "1.0.0",
     "categories": [
       "Messaging"
     ]
@@ -392,6 +433,7 @@
     "icon": "https://web.whatsapp.com/favicon-64x64.ico",
     "recipeId": "whatsapp.com",
     "serviceUrl": "https://web.whatsapp.com",
+    "version": "1.0.0",
     "categories": [
       "Messaging"
     ]
@@ -401,6 +443,7 @@
     "icon": "https://slidepad.app/icons/discord.com.png",
     "recipeId": "discordapp.com",
     "serviceUrl": "https://discordapp.com/login",
+    "version": "1.0.0",
     "categories": [
       "Messaging"
     ]
@@ -410,6 +453,7 @@
     "icon": "https://slidepad.app/icons/grammarly.com.png",
     "recipeId": "grammarly.com",
     "serviceUrl": "https://www.grammarly.com/signin",
+    "version": "1.0.0",
     "categories": [
       "Tool"
     ]
@@ -419,6 +463,7 @@
     "icon": "https://miro.com/static/favicons/favicon-32x32.png",
     "recipeId": "miro.com",
     "serviceUrl": "https://miro.com/login/",
+    "version": "1.0.0",
     "categories": [
       "Tool"
     ]
@@ -428,6 +473,7 @@
     "icon": "https://translate.google.ca/favicon.ico",
     "recipeId": "translate.google.com",
     "serviceUrl": "https://translate.google.com/",
+    "version": "1.0.0",
     "categories": [
       "Google",
       "Tool"
@@ -438,6 +484,7 @@
     "icon": "https://static.twitchcdn.net/assets/favicon-75270f9df2b07174c23c.ico",
     "recipeId": "twitch.com",
     "serviceUrl": "https://twitch.com/",
+    "version": "1.0.0",
     "categories": [
       "Video",
       "Social Network"
@@ -448,6 +495,7 @@
     "icon": "https://twitter.com/favicon.ico",
     "recipeId": "twitter.com",
     "serviceUrl": "https://twitter.com/",
+    "version": "1.0.0",
     "categories": [
       "Social Network"
     ]
@@ -457,6 +505,7 @@
     "icon": "https://facebook.com/favicon.ico",
     "recipeId": "facebook.com",
     "serviceUrl": "https://facebook.com/",
+    "version": "1.0.0",
     "categories": [
       "Social Network"
     ]

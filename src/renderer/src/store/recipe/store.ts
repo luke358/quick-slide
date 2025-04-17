@@ -1,7 +1,7 @@
 import { createZustandStore } from "../utils/helper"
 import { produce } from 'immer'
-import { tipcClient } from "@renderer/lib/client"
 import { RecipeState } from '@shared/types'
+import { recipeApi } from "@renderer/api/recipes"
 const initialState = {
   recipes: [],
 }
@@ -12,7 +12,7 @@ const set = useRecipeStore.setState
 class RecipeActions {
 
   async fetchRecipes() {
-    const recipes = await tipcClient?.getRecipes()
+    const recipes = await recipeApi.fetchRecipes()
     set(state => produce(state, draft => {
       draft.recipes = recipes || []
     }))

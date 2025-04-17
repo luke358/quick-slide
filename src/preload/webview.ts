@@ -18,3 +18,29 @@ window.addEventListener('keydown', (event) => {
     ipcRenderer.sendToHost('webview-keydown', event.key)
   }
 })
+
+class RecipeController {
+  ipcEvents = {
+    'initialize-recipe': 'loadRecipeModule',
+    'find-in-page': 'openFindInPage',
+  }
+  // // recipe: RecipeWebview | null = null;
+
+  constructor() {
+    this.initialize();
+  }
+
+  async initialize() {
+    for (const channel of Object.keys(this.ipcEvents)) {
+      ipcRenderer.on(channel, (...args) => {
+        this[this.ipcEvents[channel]](...args);
+      });
+    }
+    setTimeout(() => {
+      ipcRenderer.sendToHost('hello')
+    }, 100);
+  }
+}
+
+console.log('new RecipeController();')
+new RecipeController();

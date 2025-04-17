@@ -1,4 +1,4 @@
-import { Prisma, Services } from "@prisma/client";
+import { Services } from "@prisma/client";
 import { IRecipe } from "./recipe";
 export type ElectronWebView = Electron.WebviewTag
 
@@ -38,6 +38,11 @@ export interface RuntimeState {
 }
 export interface IService extends Services, RuntimeState {
   recipe: IRecipe;
+  settings: {
+    isHibernateEnabled: boolean;
+    isMuted: boolean;
+    enabled: boolean;
+  }
 }
 
 export interface ServiceState {
@@ -46,7 +51,3 @@ export interface ServiceState {
   serviceUsed: Set<string>;
   lastServiceUrls: Record<string, string>;
 }
-
-export type ServiceWithRecipe = Prisma.ServicesGetPayload<{
-  include: { recipe: true }
-}>

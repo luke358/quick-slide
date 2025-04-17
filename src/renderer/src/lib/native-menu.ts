@@ -1,8 +1,6 @@
 import type { MenuItemConstructorOptions } from "electron"
 import { tipcClient } from "./client"
 
-// import { tipcClient } from "./client"
-
 export type ElectronMenuItem = Omit<MenuItemConstructorOptions, "click" | "submenu"> & {
   click?: () => void
   submenu?: ElectronMenuItem[]

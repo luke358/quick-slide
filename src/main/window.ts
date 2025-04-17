@@ -66,6 +66,14 @@ export function createMainWindow() {
   mainWindow.webContents.on('will-attach-webview', (_e, webPreferences) => {
     webPreferences.preload = join(__dirname, '../preload/webview.mjs')
   })
+
+  mainWindow.webContents.on("did-attach-webview", (_, contents) => {
+    contents.setWindowOpenHandler((details) => {
+      createLinkViewWindow(details.url)
+      return { action: 'deny' }
+    })
+  })
+
   if (platform() === 'darwin') {
     addClickOutsideListener(() => {
       const preferences = store.get('preferences') || {}
@@ -129,4 +137,59 @@ export function createMainWindow() {
 
 
   return mainWindow
+}
+
+export const linkWindowMap = new Map<string, BrowserWindow>()
+export function getLinkWindow(url: string) {
+  return linkWindowMap.get(url)
+}
+export function createLinkViewWindow(url: string) {
+
+  if (getLinkWindow(url)) {
+    getLinkWindow(url)?.focus()
+    return
+  }
+  const cursorPoint = screen.getCursorScreenPoint();
+  const currentDisplay = screen.getDisplayNearestPoint(cursorPoint);
+
+  const width = 800;
+  const height = 600;
+
+  const x = currentDisplay.workArea.x + Math.round((currentDisplay.workArea.width - width) / 2);
+  const y = currentDisplay.workArea.y + Math.round((currentDisplay.workArea.height - height) / 2);
+
+  const linkViewWindow = createWindow({
+    width,
+    height,
+    x,
+    y,
+    titleBarStyle: 'hidden',
+    transparent: true,
+    roundedCorners: false,  // macOS
+    ...(process.platform === 'linux' ? { icon } : {}),
+    hiddenInMissionControl: true,
+    resizable: true,
+    webPreferences: {
+      preload: join(__dirname, '../preload/index.mjs'),
+      contextIsolation: true,
+      nodeIntegration: true,
+      webviewTag: true,
+    }
+  });
+  linkViewWindow.setAlwaysOnTop(true, 'floating', 1);
+
+  const _url = encodeURIComponent(url)
+
+  linkWindowMap.set(_url, linkViewWindow)
+
+  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+    linkViewWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/#/link-view?url=${_url}`)
+  } else {
+    linkViewWindow.loadFile(join(__dirname, '../renderer/index.html'), {
+      hash: 'link-view',
+      query: {
+        url: _url,
+      },
+    })
+  }
 }

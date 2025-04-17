@@ -4,6 +4,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@renderer/components/ui
 import VerticalSwitch from "@renderer/components/ui/vertical-switch";
 import { HotKeyScopeMap } from "@renderer/constants/hotkeys";
 import { cn, getOS } from "@renderer/lib/utils";
+import { servicesQuery } from "@renderer/queries/services";
 import { useActiveServiceId, useServicesData } from "@renderer/store/services/hooks";
 import { serviceActions } from "@renderer/store/services/store";
 import { IService } from "@shared/types";
@@ -21,6 +22,9 @@ interface ServiceComponentProps extends PopoverProps {
 
 const ServiceComponent = memo(({ service, shortcut, children, isActive, onActivate, open, setOpen, ...props }: PropsWithChildren<ServiceComponentProps>) => {
   const finalShortcut = getOS() === "Windows" ? shortcut?.replace("meta", "ctrl").replace("Meta", "Ctrl") : shortcut
+
+  const removeServiceMutation = servicesQuery.removeService()
+  const updateSettingsMutation = servicesQuery.updateSettings()
 
   const webview = service.webview
 
@@ -54,7 +58,7 @@ const ServiceComponent = memo(({ service, shortcut, children, isActive, onActiva
       <div className="flex flex-col gap-4">
         <div className="flex justify-between w-full">
           <div className="flex gap-1">
-            <RecipeIcon name={service.recipe.name} icon={service.recipe.icon} className="h-8 w-auto" />
+            <RecipeIcon recipe={service.recipe} className="h-8 w-auto" />
             <div>
               <div className="text-sm">{service.name}</div>
               <div className="text-xs">{/* X. It's what's happening TODO: show title */}</div>
@@ -62,17 +66,25 @@ const ServiceComponent = memo(({ service, shortcut, children, isActive, onActiva
           </div>
           <div className="flex gap-3">
             <VerticalSwitch
-              checked={service.enabled}
+              checked={service.settings.enabled}
               onCheckedChange={(checked) => {
-                serviceActions.updateService(service, 'enabled', checked)
+                updateSettingsMutation.mutate({
+                  service,
+                  key: 'enabled',
+                  value: checked,
+                })
               }}
             />
-            <div><Volume1 size={14} className={cn({ 'text-blue-600': !service.isMuted })}
+            <div><Volume1 size={14} className={cn({ 'text-blue-600': !service.settings.isMuted })}
               onClick={() => {
-                serviceActions.toggleMute(service.serviceId)
+                updateSettingsMutation.mutate({
+                  service,
+                  key: 'isMuted',
+                  value: !service.settings.isMuted,
+                })
               }} /></div>
             <div onClick={() => {
-              serviceActions.removeService(service.serviceId)
+              removeServiceMutation.mutate(service.serviceId)
             }}>
               <Trash2 size={14} />
             </div>
@@ -100,7 +112,7 @@ const ServiceComponent = memo(({ service, shortcut, children, isActive, onActiva
         </div>
       </div>
     </PopoverContent>
-  </Popover >
+  </Popover>
 })
 
 export const ServiceColumn: FC = memo(() => {
@@ -129,7 +141,7 @@ export const ServiceColumn: FC = memo(() => {
           open={openPopover === service.serviceId}
           setOpen={(open) => setOpen(service.serviceId, open)}
         >
-          <RecipeIcon name={service.recipe.name} icon={service.recipe.icon} className="w-5 h-5" />
+          <RecipeIcon recipe={service.recipe} className="w-5 h-5" />
         </ServiceComponent>)
       }
     </div>

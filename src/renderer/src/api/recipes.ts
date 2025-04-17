@@ -1,4 +1,4 @@
-import { Recipes } from "@prisma/client"
+import { Recipes } from "@shared/types"
 import { ofetch } from "ofetch"
 
 export const recipeApi = {

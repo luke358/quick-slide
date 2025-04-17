@@ -4,7 +4,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@renderer/components/ui
 import VerticalSwitch from "@renderer/components/ui/vertical-switch";
 import { HotKeyScopeMap } from "@renderer/constants/hotkeys";
 import { cn, getOS } from "@renderer/lib/utils";
-import { servicesQuery } from "@renderer/queries/services";
+import { useRemoveServiceMutation, useUpdateSettingsMutation } from "@renderer/queries/services";
 import { useActiveServiceId, useServicesData } from "@renderer/store/services/hooks";
 import { serviceActions } from "@renderer/store/services/store";
 import { IService } from "@shared/types";
@@ -23,8 +23,8 @@ interface ServiceComponentProps extends PopoverProps {
 const ServiceComponent = memo(({ service, shortcut, children, isActive, onActivate, open, setOpen, ...props }: PropsWithChildren<ServiceComponentProps>) => {
   const finalShortcut = getOS() === "Windows" ? shortcut?.replace("meta", "ctrl").replace("Meta", "Ctrl") : shortcut
 
-  const removeServiceMutation = servicesQuery.removeService()
-  const updateSettingsMutation = servicesQuery.updateSettings()
+  const removeServiceMutation = useRemoveServiceMutation()
+  const updateSettingsMutation = useUpdateSettingsMutation()
 
   const webview = service.webview
 
@@ -135,7 +135,7 @@ export const ServiceColumn: FC = memo(() => {
         services?.map((service, index) => <ServiceComponent
           key={service.serviceId}
           service={service}
-          shortcut={`${index + 1}`}
+          shortcut={`Meta+${index + 1}`}
           isActive={id === service.serviceId}
           onActivate={onActivate}
           open={openPopover === service.serviceId}

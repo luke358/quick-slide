@@ -4,11 +4,11 @@ import { shortcuts } from "@renderer/constants/shortcuts";
 import { Sidebar } from "@renderer/modules/sidebar";
 import { useActiveServiceId, useServicesData, useServiceUsed } from "@renderer/store/services/hooks";
 import { useHotkeys } from "react-hotkeys-hook";
-import { Queries } from "@renderer/queries";
 import AddPanel from "@renderer/components/add-panel";
+import { useServices } from "@renderer/queries/services";
 
 export default function Home() {
-  const { isLoading } = Queries.servicesQuery.services()
+  const { isLoading } = useServices()
   const { ipcRenderer } = window.electron
   const serviceUsed = useServiceUsed()
   const services = useServicesData()

@@ -8,15 +8,17 @@ const hasFocusedElement = () => {
   return document.activeElement && document.activeElement !== document.body;
 };
 
-window.addEventListener('keydown', (event) => {
+window.addEventListener('keydown', (e) => {
   if (hasFocusedElement()) return
-  if (event.key === 'Escape') {
-    ipcRenderer.send('set-showing', false)
-  } else if (event.key === 'p' && event.metaKey) {
-    ipcRenderer.send('set-pin')
-  } else {
-    ipcRenderer.sendToHost('webview-keydown', event.key)
-  }
+  ipcRenderer.sendToHost('webview-keydown', {
+    key: e.key,
+    metaKey: e.metaKey,
+    ctrlKey: e.ctrlKey,
+    altKey: e.altKey,
+    shiftKey: e.shiftKey,
+    bubbles: true,
+    cancelable: true,
+  })
 })
 
 class RecipeController {

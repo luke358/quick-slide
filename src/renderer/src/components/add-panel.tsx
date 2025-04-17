@@ -2,12 +2,12 @@ import { PlusIcon } from "lucide-react";
 import { ScrollArea } from "./ui/scroll-area";
 // import { useRecipes } from "@renderer/store/recipe/hooks";
 import RecipeIcon from "./RecipeIcon";
-import { servicesQuery } from "@renderer/queries/services";
-import { recipesQuery } from "@renderer/queries/recipes";
+import { useAddServiceMutation } from "@renderer/queries/services";
+import { useRecipes } from "@renderer/queries/recipes";
 
 export default function AddPanel() {
-  const { isLoading, isError, data: recipes } = recipesQuery.recipes()
-  const addServiceMutation = servicesQuery.addService()  // 在组件顶部调用 hook
+  const { isLoading, isError, data: recipes } = useRecipes()
+  const addServiceMutation = useAddServiceMutation()
 
   if (isLoading) return <div>Loading...</div>
   if (isError) return <div>Load Recipe Error</div>

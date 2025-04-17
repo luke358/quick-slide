@@ -6,9 +6,9 @@ import { WebviewTag } from "electron";
 import { Services } from "@prisma/client";
 import { tipcClient } from "@renderer/lib/client";
 import { IService, Recipes, RUNTIME_STATE_KEYS, RuntimeState, ServiceState } from "@shared/types";
-import { recipeActions } from "../recipe/store";
 import { queryClient } from "@renderer/lib/query-client";
 import { produce } from "immer";
+import { recipesQuery } from "@renderer/queries/recipes";
 
 const initialState = {
   services: [],
@@ -102,7 +102,7 @@ class ServiceActions {
 
   // Fetch
   async fetchServices() {
-    const recipes = await queryClient.fetchQuery({ queryKey: ['recipes'], queryFn: recipeActions.fetchRecipes })
+    const recipes = await queryClient.fetchQuery(recipesQuery.getRecipes)
     const services = await tipcClient?.getServices() || []
     const mergedServices = mergeServiceData(services, get().services, recipes)
     console.log(mergedServices, 'mergedServices')
@@ -164,10 +164,9 @@ class ServiceActions {
     webview?.addEventListener('ipc-message', (e) => {
       switch (e.channel) {
         case 'webview-keydown':
-          const key = parseInt(e.args[0])
-          if (key > 0 && key <= 9 && key <= get().services.length) {
-            this.setActive(get().services[key - 1].serviceId)
-          }
+          // 创建一个新的原生事件
+          const event = new KeyboardEvent('keydown', e.args[0]);
+          document.dispatchEvent(event);
           break;
         case 'hello':
           break;

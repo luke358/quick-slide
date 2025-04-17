@@ -3,6 +3,7 @@ import RecipeIcon from "@renderer/components/RecipeIcon";
 import { Popover, PopoverContent, PopoverTrigger } from "@renderer/components/ui/popover";
 import VerticalSwitch from "@renderer/components/ui/vertical-switch";
 import { HotKeyScopeMap } from "@renderer/constants/hotkeys";
+import { shortcuts } from "@renderer/constants/shortcuts";
 import { cn, getOS } from "@renderer/lib/utils";
 import { useRemoveServiceMutation, useUpdateSettingsMutation } from "@renderer/queries/services";
 import { useActiveServiceId, useServicesData } from "@renderer/store/services/hooks";
@@ -31,7 +32,9 @@ const ServiceComponent = memo(({ service, shortcut, children, isActive, onActiva
   useHotkeys(finalShortcut, (e) => {
     e.preventDefault()
     onActivate?.(service.serviceId)
-  }, { scopes: HotKeyScopeMap.Home })
+  }, {
+    scopes: HotKeyScopeMap.Home
+  })
 
   return <Popover modal open={open} onOpenChange={setOpen} {...props}>
     <PopoverTrigger
@@ -128,6 +131,24 @@ export const ServiceColumn: FC = memo(() => {
     setOpenPopover(null)
     serviceActions.setActive(serviceId)
   }
+
+  useHotkeys(shortcuts.home.prevApp.key, () => {
+    let index = services?.findIndex((service) => service.serviceId === id)
+    index = Math.min(index - 1, services?.length - 1)
+    serviceActions.setActive(services?.[index]?.serviceId)
+  }, {
+    preventDefault: true,
+    scopes: HotKeyScopeMap.Home
+  })
+
+  useHotkeys(shortcuts.home.nextApp.key, () => {
+    let index = services?.findIndex((service) => service.serviceId === id)
+    index = Math.min(index + 1, services?.length - 1)
+    serviceActions.setActive(services?.[index]?.serviceId)
+  }, {
+    preventDefault: true,
+    scopes: HotKeyScopeMap.Home
+  })
 
   return <div className='flex-1 flex flex-col justify-between pt-2 w-full select-none h-full overflow-hidden'>
     <div className="overflow-auto no-scrollbar">

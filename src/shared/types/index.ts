@@ -16,3 +16,4 @@ export type WindowRuntime = {
 
 export * from './recipe'
 export * from './service'
+export * from './tipc'

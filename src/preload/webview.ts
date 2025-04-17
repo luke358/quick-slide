@@ -12,12 +12,21 @@ window.addEventListener('keydown', (e) => {
   if (hasFocusedElement()) return
   ipcRenderer.sendToHost('webview-keydown', {
     key: e.key,
+    code: e.code,
+    keyCode: e.keyCode,
+    which: e.which,
+    location: e.location,
+    repeat: e.repeat,
+    isComposing: e.isComposing,
     metaKey: e.metaKey,
     ctrlKey: e.ctrlKey,
     altKey: e.altKey,
     shiftKey: e.shiftKey,
     bubbles: true,
     cancelable: true,
+    composed: true,
+    type: e.type,
+    timeStamp: e.timeStamp
   })
 })
 

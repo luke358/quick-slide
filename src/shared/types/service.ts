@@ -36,7 +36,7 @@ export interface RuntimeState {
     isDarkModeEnabled: boolean
   }
 }
-export interface IService extends Services, RuntimeState {
+export interface IService extends Omit<Services, 'settings'>, RuntimeState {
   recipe: IRecipe;
   settings: {
     isHibernateEnabled: boolean;

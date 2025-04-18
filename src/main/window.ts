@@ -11,6 +11,7 @@ import { platform } from "os";
 const windows = {
   mainWindow: null as BrowserWindow | null,
   overlayWindow: null as BrowserWindow | null,
+  shortcutsWindows: null as BrowserWindow | null,
 }
 globalThis["windows"] = windows
 
@@ -190,6 +191,56 @@ export function createLinkViewWindow(url: string) {
       query: {
         url: _url,
       },
+    })
+  }
+}
+
+
+export function createShortcutsWindow() {
+
+  if (windows.shortcutsWindows) {
+    windows.shortcutsWindows.show()
+    return
+  }
+
+  const cursorPoint = screen.getCursorScreenPoint();
+  const currentDisplay = screen.getDisplayNearestPoint(cursorPoint);
+
+  const width = 400;
+  const height = 350;
+
+  const x = currentDisplay.workArea.x + Math.round((currentDisplay.workArea.width - width) / 2);
+  const y = currentDisplay.workArea.y + Math.round((currentDisplay.workArea.height - height) / 2);
+
+  const shortcutsWindow = createWindow({
+    width,
+    height,
+    x,
+    y,
+    titleBarStyle: 'hidden',
+    transparent: true,
+    roundedCorners: false,  // macOS
+    ...(process.platform === 'linux' ? { icon } : {}),
+    hiddenInMissionControl: true,
+    resizable: true,
+    webPreferences: {
+      preload: join(__dirname, '../preload/index.mjs'),
+      contextIsolation: true,
+      nodeIntegration: true,
+      webviewTag: true,
+    }
+  });
+  shortcutsWindow.setAlwaysOnTop(true, 'floating', 1);
+
+  shortcutsWindow.on('blur', () => {
+    shortcutsWindow.hide()
+  })
+
+  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+    shortcutsWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/#/shortcuts`)
+  } else {
+    shortcutsWindow.loadFile(join(__dirname, '../renderer/index.html'), {
+      hash: 'shortcuts',
     })
   }
 }

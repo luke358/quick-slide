@@ -137,7 +137,7 @@ export const Kbd: FC<{ children: string; className?: string }> = memo(({ childre
   const [isKeyPressed, setIsKeyPressed] = React.useState(false)
   React.useEffect(() => {
     const handler = () => {
-      setIsKeyPressed(isHotkeyPressed(children.toLowerCase()))
+      setIsKeyPressed(isHotkeyPressed(children.toLowerCase(), ','))
     }
     document.addEventListener("keydown", handler)
     document.addEventListener("keyup", handler)
@@ -166,7 +166,7 @@ export const Kbd: FC<{ children: string; className?: string }> = memo(({ childre
           className,
         )}
       >
-        {children.split("+").map((key_) => {
+        {children.replace(/\+\+/g, ' +').replace(/\+([^\s])/g, ' $1').split(" ").map((key_) => {
           let key: string = key_.toLowerCase()
           for (const [k, v] of Object.entries(specialKeys)) {
             key = key.replace(k, v)

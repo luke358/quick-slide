@@ -51,7 +51,7 @@
     "mouse-click-outside": "./mouse-click-outside",
     "ms": "^2.1.3",
     "ofetch": "^1.4.1",
-    "react-hotkeys-hook": "^4.6.1",
+    "react-hotkeys-hook": "^5.0.1",
     "react-router-dom": "^6.28.0",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",

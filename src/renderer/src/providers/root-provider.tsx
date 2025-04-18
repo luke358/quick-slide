@@ -28,6 +28,8 @@ export const RootProvider = () => {
 const DisableMetaW = () => {
   useHotkeys("Meta+W", (e) => {
     e.preventDefault()
+  }, {
+    useKey: true,
   })
   return null
 }

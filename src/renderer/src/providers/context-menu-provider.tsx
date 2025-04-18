@@ -95,6 +95,7 @@ const Item = memo(({ item }: { item: FollowMenuItem }) => {
     enabled: (item as any).enabled !== false && (item as any).shortcut !== undefined,
     scopes: HotKeyScopeMap.Menu,
     preventDefault: true,
+    useKey: true,
   })
 
   switch (item.type) {

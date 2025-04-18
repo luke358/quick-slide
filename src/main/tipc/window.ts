@@ -1,5 +1,5 @@
 import { shell } from 'electron';
-import { getLinkWindow, linkWindowMap } from '../window';
+import { createShortcutsWindow, createWindow, getLinkWindow, linkWindowMap } from '../window';
 import { t } from './_instance';
 
 export const windowRoute = {
@@ -11,6 +11,9 @@ export const windowRoute = {
   }),
   openExternal: t.procedure.input<string>().action(async ({ input }) => {
     shell.openExternal(input)
-  })
+  }),
+  openShortcutsWindow: t.procedure.action(async () => {
+    createShortcutsWindow()
+  }),
 }
 

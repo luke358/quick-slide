@@ -33,7 +33,8 @@ const ServiceComponent = memo(({ service, shortcut, children, isActive, onActiva
     e.preventDefault()
     onActivate?.(service.serviceId)
   }, {
-    scopes: HotKeyScopeMap.Home
+    scopes: HotKeyScopeMap.Home,
+    useKey: true
   })
 
   return <Popover modal open={open} onOpenChange={setOpen} {...props}>
@@ -138,7 +139,8 @@ export const ServiceColumn: FC = memo(() => {
     serviceActions.setActive(services?.[index]?.serviceId)
   }, {
     preventDefault: true,
-    scopes: HotKeyScopeMap.Home
+    scopes: HotKeyScopeMap.Home,
+    useKey: true
   })
 
   useHotkeys(shortcuts.home.nextApp.key, () => {
@@ -147,7 +149,8 @@ export const ServiceColumn: FC = memo(() => {
     serviceActions.setActive(services?.[index]?.serviceId)
   }, {
     preventDefault: true,
-    scopes: HotKeyScopeMap.Home
+    scopes: HotKeyScopeMap.Home,
+    useKey: true
   })
 
   return <div className='flex-1 flex flex-col justify-between pt-2 w-full select-none h-full overflow-hidden'>

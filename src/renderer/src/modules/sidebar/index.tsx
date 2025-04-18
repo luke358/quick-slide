@@ -36,6 +36,7 @@ export const Sidebar: FC = () => {
     togglePin()
   }, {
     scopes: HotKeyScopeMap.Home,
+    useKey: true
   })
 
   const showContextMenu = useShowContextMenu()
@@ -82,6 +83,16 @@ export const Sidebar: FC = () => {
               {
                 type: 'text',
                 label: 'Reset QuickSlide',
+              },
+              {
+                type: "separator",
+              },
+              {
+                type: 'text',
+                label: 'Keyboard Shortcuts',
+                click: () => {
+                  tipcClient?.openShortcutsWindow()
+                },
               },
             ],
           },

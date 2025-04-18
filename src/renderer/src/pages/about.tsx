@@ -1,6 +1,5 @@
 
 import icon from '@renderer/assets/electron.svg'
-import { ScrollArea } from '@renderer/components/ui/scroll-area'
 import { tipcClient } from '@renderer/lib/client'
 import { useQuery } from '@tanstack/react-query'
 export default function About() {
@@ -16,11 +15,11 @@ export default function About() {
         <div className='text-sm'>QuickSlide</div>
         <div className='text-[10px]'>Version {appVersion}</div>
       </div>
-      <ScrollArea type='always' className="flex-1 text-[10px] px-2 bg-gray-900 w-full whitespace-pre-wrap break-words font-mono">
+      <div className="flex-1 text-[10px] px-2 bg-gray-900 w-full whitespace-pre-wrap overflow-x-hidden break-words font-mono overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:bg-gray-600 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-800">
         开源软件声明
         {'\n'}
         __LICENSE__
-      </ScrollArea>
+      </div>
       <div className='text-[10px] pt-1'>Copyright @ 2025 QuickSlide. All rights reserved</div>
     </div >
   )

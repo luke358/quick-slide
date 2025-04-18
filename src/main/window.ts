@@ -1,5 +1,4 @@
 import { BrowserWindow, BrowserWindowConstructorOptions, screen, shell } from "electron";
-import icon from '../../resources/icon.png?asset'
 import { join } from "path";
 import { is } from "@electron-toolkit/utils";
 import { store } from "./store";
@@ -7,11 +6,13 @@ import { BOUNDARY_GAP } from "./constants";
 import { hideToRight } from "./lib/windowAnimation";
 import { addClickOutsideListener } from 'mouse-click-outside'
 import { platform } from "os";
+import { getIconPath } from "./helper";
 
 const windows = {
   mainWindow: null as BrowserWindow | null,
   overlayWindow: null as BrowserWindow | null,
   shortcutsWindows: null as BrowserWindow | null,
+  aboutWindow: null as BrowserWindow | null,
 }
 globalThis["windows"] = windows
 
@@ -51,7 +52,7 @@ export function createMainWindow() {
     focusable: true,
     titleBarStyle: 'hidden',
     roundedCorners: false,  // macOS
-    ...(process.platform === 'linux' ? { icon } : {}),
+    ...(process.platform === 'linux' ? { icon: getIconPath() } : {}),
     hiddenInMissionControl: true,
     resizable: true,
     webPreferences: {
@@ -167,7 +168,7 @@ export function createLinkViewWindow(url: string) {
     titleBarStyle: 'hidden',
     transparent: true,
     roundedCorners: false,  // macOS
-    ...(process.platform === 'linux' ? { icon } : {}),
+    ...(process.platform === 'linux' ? { icon: getIconPath() } : {}),
     hiddenInMissionControl: true,
     resizable: true,
     webPreferences: {
@@ -182,6 +183,10 @@ export function createLinkViewWindow(url: string) {
   const _url = encodeURIComponent(url)
 
   linkWindowMap.set(_url, linkViewWindow)
+
+  linkViewWindow.on('closed', () => {
+    linkWindowMap.delete(_url)
+  })
 
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     linkViewWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/#/link-view?url=${_url}`)
@@ -220,7 +225,7 @@ export function createShortcutsWindow() {
     titleBarStyle: 'hidden',
     transparent: true,
     roundedCorners: false,  // macOS
-    ...(process.platform === 'linux' ? { icon } : {}),
+    ...(process.platform === 'linux' ? { icon: getIconPath() } : {}),
     hiddenInMissionControl: true,
     resizable: true,
     webPreferences: {
@@ -243,4 +248,43 @@ export function createShortcutsWindow() {
       hash: 'shortcuts',
     })
   }
+}
+
+export function createAboutWindow() {
+  if (windows.aboutWindow) {
+    windows.aboutWindow.show()
+    return
+  }
+  const cursorPoint = screen.getCursorScreenPoint();
+  const currentDisplay = screen.getDisplayNearestPoint(cursorPoint);
+  const width = 300;
+  const height = 400;
+  const x = currentDisplay.workArea.x + Math.round((currentDisplay.workArea.width - width) / 2);
+  const y = currentDisplay.workArea.y + Math.round((currentDisplay.workArea.height - height) / 2);
+  const aboutWindow = createWindow({
+    x,
+    y,
+    width,
+    height,
+    resizable: false,
+    minimizable: false,
+    alwaysOnTop: true,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
+    title: '',
+  })
+  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+    aboutWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/#/about`)
+  } else {
+    aboutWindow.loadFile(join(__dirname, '../renderer/index.html'), {
+      hash: 'about',
+    })
+  }
+
+  windows.aboutWindow = aboutWindow
+  aboutWindow.on('closed', () => {
+    windows.aboutWindow = null
+  })
 }

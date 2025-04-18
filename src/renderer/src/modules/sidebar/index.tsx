@@ -52,6 +52,13 @@ export const Sidebar: FC = () => {
             submenu: [
               {
                 type: "text",
+                label: 'Disable Mouse Slide Triggering',
+                click: () => {
+                  // togglePin()
+                }
+              },
+              {
+                type: "text",
                 label: 'Pin QuickSlide',
                 checked: preferences.isPin,
                 shortcut: "Meta+P",
@@ -59,33 +66,54 @@ export const Sidebar: FC = () => {
                   togglePin()
                 }
               },
-              // {
-              //   type: "text",
-              //   label: 'Faster Slide Animation',
-              // },
-              // {
-              //   type: "text",
-              //   label: 'Multi-Screen Follow Mouse',
-              // },
+              { type: "separator" },
               {
-                type: "separator",
+                type: "text",
+                checked: true,
+                label: 'Start at Login',
+                click: () => {
+                  // togglePin()
+                }
               },
               {
                 type: "text",
+                label: 'Auto Mute',
+                checked: true,
+                click: () => {
+                  // togglePin()
+                }
+              },
+              {
+                type: "text",
+                checked: true,
+                label: 'Multi-Screen FollowMouse',
+                click: () => {
+                  // togglePin()
+                }
+              },
+              { type: "separator" },
+              {
+                type: "text",
                 label: 'Clear Cache',
-                shortcut: "Meta+C",
+                click: () => {
+                  // tipcClient?.openShortcutsWindow()
+                },
               },
               {
                 type: "text",
                 label: 'Clear Cookies',
-                shortcut: "Meta+D",
+                click: () => {
+                  // tipcClient?.openShortcutsWindow()
+                },
               },
               {
-                type: 'text',
-                label: 'Reset QuickSlide',
+                type: "text",
+                label: 'Clear Reset QuickSlide',
               },
+              { type: "separator" },
               {
-                type: "separator",
+                type: "text",
+                label: 'No Update',
               },
               {
                 type: 'text',
@@ -94,6 +122,20 @@ export const Sidebar: FC = () => {
                   tipcClient?.openShortcutsWindow()
                 },
               },
+              {
+                type: "text",
+                label: 'Release Notes',
+                click: () => {
+                  tipcClient?.openReleaseNotesDialog()
+                },
+              },
+              {
+                type: "text",
+                label: 'About',
+                click: () => {
+                  tipcClient?.openAboutWindow()
+                }
+              }
             ],
           },
           {

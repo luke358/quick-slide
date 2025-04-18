@@ -1,4 +1,5 @@
 import SlideLayout from "@renderer/layouts/SlideLayout";
+import About from "@renderer/pages/about";
 import Home from "@renderer/pages/home";
 import LinkView from "@renderer/pages/link-view";
 import Overlay from "@renderer/pages/overlay";
@@ -23,6 +24,10 @@ const router: ReturnType<typeof createHashRouter> = createHashRouter([
   {
     path: '/shortcuts',
     element: <Shortcuts />,
+  },
+  {
+    path: '/about',
+    element: <About />,
   },
   {
     path: '/overlay',

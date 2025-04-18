@@ -1,5 +1,4 @@
 import { tipcClient } from "@renderer/lib/client";
-import { serviceActions } from "@renderer/store/services/store";
 import { ExternalLink, MoveDownRight, X } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 

@@ -13,6 +13,9 @@ export const appRoute = {
   }),
   showFromRight: t.procedure.action(async () => {
     showFromRight()
-  })
+  }),
+  getAppVersion: t.procedure.action(async () => {
+    return app.getVersion()
+  }),
 }
 
